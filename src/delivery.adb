@@ -9,7 +9,7 @@ package body Delivery is
       while not End_Of_Shift loop
          select
             accept Przyjecie_dostawy (ShrimpsTruck : ShrimpsDelivery) do
-               Put_Line("Kukirniarze: Przyjelismy ladunek o ID: " & ShrimpsTruck.Id'Image & ", Towar: " & ShrimpsTruck.Towar & ", Ilość: " & ShrimpsTruck.Ilosc'Image);
+               Put_Line("Kukirniarze: Przyjelismy ladunek o ID: " & ShrimpsTruck.Id'Image & ", Towar: " & ShrimpsTruck.Towar & ", Ilosc: " & ShrimpsTruck.Ilosc'Image);
             end Przyjecie_dostawy;
             
             Put_Line("Kukirniarze: Rozpoczynamy rozladunek");

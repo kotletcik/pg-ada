@@ -25,7 +25,7 @@ begin
       New_Delivery.Id := I;
       New_Delivery.Towar := "Krewetki";
       New_Delivery.Ilosc := Randomizing.Random(Gen);
-      Put_line("Przyjechał samochod"  & Integer'Image(I) & " i czeka na rozładunek");
+      Put_line("Przyjechal samochod"  & Integer'Image(I) & " i czeka na rozladunek");
      
       -- Wywołanie naszego spotkania, dwa taski
       -- się synchronizują
