@@ -2,8 +2,10 @@ with Ada.Numerics.Discrete_Random;
 with Ada.Text_IO;
 use Ada.Text_IO;
 with Delivery;
+with Kukiriniarz;
 
-procedure pg_ada is
+
+procedure main is
    -- w taki sposob definiuje sie losowanie liczb calkowitych, z poradnika
    -- wybieramy zakres
 
@@ -18,10 +20,15 @@ procedure pg_ada is
    -- zmienna z nasza losowa liczba
    DelayTime : OurDelay;
    New_Delivery : Delivery.ShrimpsDelivery;
+
+   --tworzenie kukiriniarzy
+   KukiriniarzG2 : Kukiriniarz.Kid ("G2");
+   KukiriniarzG4 : Kukiriniarz.Kid ("G4");
 begin
    Randomizing.Reset(Gen);
    for I in 1 .. 10 loop
       
+      --tworzenie dostaw
       New_Delivery.Id := I;
       New_Delivery.Towar := "Krewetki";
       New_Delivery.Ilosc := Randomizing.Random(Gen);
@@ -33,6 +40,9 @@ begin
       
       DelayTime := Randomizing.Random(Gen);
       delay Duration(DelayTime);
+
+
    end loop;
    Delivery.Unloading.Zakoncz;
-end pg_ada;
+   KukiriniarzG2.Finish;
+end main;
