@@ -3,7 +3,7 @@ with Ada.Text_IO;
 use Ada.Text_IO;
 with Delivery;
 
-procedure pg_ada is
+procedure main is
    -- w taki sposob definiuje sie losowanie liczb calkowitych, z poradnika
    -- wybieramy zakres
 
@@ -35,4 +35,4 @@ begin
       delay Duration(DelayTime);
    end loop;
    Delivery.Unloading.Zakoncz;
-end pg_ada;
+end main;
