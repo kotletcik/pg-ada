@@ -1,27 +1,27 @@
-task body Kukiriniarz is
-   End : Boolean := False;
-   ShrimpType : Character;
-   Quantity : Integer;
-begin
-   while not End loop
-      select
-         accept Transport (ShrimpType : Character; Quantity : Integer) do
-            ShrimpType := ShrimpType;
-            Quantity := Quantity;
-            Put_Line ("[K" & Integer'Image (Id) & "] Otrzymano zadanie transportu");
-         end Transport;
+with Ada.Text_IO;
+use Ada.Text_IO;
 
-         Put_Line ("[K" & Integer'Image (Id) & "] Jedzie do magazynu...");
-         delay 2.0;
+package body Kukiriniarz is
+   task body Kid is
+      Is_End : Boolean := False;
+   begin
+      while not Is_End loop
+         select
+            accept Transport (ShrimpType : Character; Quantity : Integer) do
+               Put_Line ("[K" & Id & "] Otrzymano zadanie transportu");
+            end Transport;
 
-         Magazyn.Przyjmij (Ladunek_Towar, Ladunek_Ilosc);
-         Put_Line ("[K" & Integer'Image (Id) & "] Dostarczono towar, kukiriniarz jest  wolny");
+            Put_Line ("[K" & Id & "] Jedzie do magazynu...");
+            delay 4.0;
 
-      or
-         accept End;
-         End := True;
-      end select;
-   end loop;
+            Put_Line ("[K" & Id & "] Dostarczono towar, kukiriniarz ma wolne");
 
-   Put_Line ("[K" & Integer'Image (Id) & "] Koniec pracy kukiriniarza");
+         or
+            accept Finish;
+            Is_End := True;
+         end select;
+      end loop;
+
+      Put_Line ("[K" & Id & "] Koniec pracy kukiriniarza");
+   end Kid;
 end Kukiriniarz;
