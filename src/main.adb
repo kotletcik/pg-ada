@@ -3,6 +3,7 @@ with Ada.Text_IO;
 use Ada.Text_IO;
 with Delivery;
 with Kukiriniarz;
+with Warehouse;
 
 
 procedure main is
@@ -45,4 +46,7 @@ begin
    end loop;
    Delivery.Unloading.Zakoncz;
    KukiriniarzG2.Finish;
+
+   -- Wyświetlamy stan magazynu
+   Warehouse.Storage.Check_Stock;
 end main;
