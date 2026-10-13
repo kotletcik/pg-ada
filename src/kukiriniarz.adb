@@ -1,5 +1,6 @@
 with Ada.Text_IO;
 use Ada.Text_IO;
+with Warehouse;
 
 package body Kukiriniarz is
    task body Kid is
@@ -9,13 +10,13 @@ package body Kukiriniarz is
          select
             accept Transport (ShrimpType : Character; Quantity : Integer) do
                Put_Line ("[K" & Id & "] Otrzymano zadanie transportu");
+
+               Put_Line ("[K" & Id & "] Jedzie do magazynu...");
+               delay 4.0;
+            
+               Warehouse.Storage.Accept_Delivery (ShrimpType, Quantity);
+               Put_Line ("[K" & Id & "] Dostarczono towar, kukiriniarz ma wolne");
             end Transport;
-
-            Put_Line ("[K" & Id & "] Jedzie do magazynu...");
-            delay 4.0;
-
-            Put_Line ("[K" & Id & "] Dostarczono towar, kukiriniarz ma wolne");
-
          or
             accept Finish;
             Is_End := True;
