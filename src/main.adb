@@ -37,13 +37,13 @@ begin
 
       TrucksMonster(I).Start(
          Id => I,
-         Ilosc => Randomizing.Random(Gen) *10
+         Quantity => Randomizing.Random(Gen) *10
       );
    end loop;
    for I in TrucksMonster'Range loop
       TrucksMonster(I).Departure;
    end loop;
-   Delivery.Unloading.Zakoncz;
+   Delivery.Unloading.Finish;
    KukiriniarzG2.Finish;
    KukiriniarzG4.Finish;
    -- Wyświetlamy stan magazynu

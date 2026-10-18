@@ -3,19 +3,19 @@ with Delivery;
 
 package body MonsterTrucks is
    task body Truck is
-      Ladunek : Delivery.ShrimpsDelivery;
+      TruckCargo : Delivery.ShrimpsDelivery;
    begin
-      accept Start(Id : Integer; Ilosc : Integer) do
-         Ladunek.Id := Id;
-         Ladunek.Towar := "Krewetki";
-         Ladunek.Ilosc := Ilosc;
+      accept Start(Id : Integer; Quantity : Integer) do
+         TruckCargo.Id := Id;
+         TruckCargo.Commodity := "Krewetki";
+         TruckCargo.Quantity := Quantity;
       end Start;
       
-      Put_Line("Mafia Krewetkowa: MonsterTruck " & Ladunek.Id'Image & " wyruszyl w trasce i zaraz sie zamelduje");
+      Put_Line("Mafia Krewetkowa: MonsterTruck " & TruckCargo.Id'Image & " wyruszyl w trase i zaraz sie zamelduje");
       
-      Delivery.Unloading.Przyjecie_dostawy(Ladunek);
+      Delivery.Unloading.DeliveryAcceptance(TruckCargo);
       
-      Put_Line("Mafia Krewetkowa: MonsterTruck " & Ladunek.Id'Image & " wraca puste do bazy.");
+      Put_Line("Mafia Krewetkowa: MonsterTruck " & TruckCargo.Id'Image & " wraca pusty do bazy.");
       accept Departure;
    end Truck;
 end MonsterTrucks;
