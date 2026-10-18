@@ -25,7 +25,7 @@ package body Warehouse is
                   elsif GoodType = 'C' then
                      Goods_C := Goods_C + Quantity;
                   end if;
-                  Put_Line ("[M] Przyjeto dostawę: " & Quantity'Image & " sztuk towaru typu " & GoodType'Image);
+                  Put_Line ("[M] Przyjeto dostawe: " & Quantity'Image & " sztuk towaru typu " & GoodType'Image);
                end Accept_Delivery;
 
          or
