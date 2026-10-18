@@ -19,16 +19,16 @@ package body Delivery is
    begin
       while not End_Of_Shift loop
          select
-            accept Przyjecie_dostawy (ShrimpsTruck : ShrimpsDelivery) do
-               Put_Line("Pracownik: Przyjelismy ladunek o ID: " & ShrimpsTruck.Id'Image & ", Towar: " & ShrimpsTruck.Towar & ", Ilosc: " & ShrimpsTruck.Ilosc'Image);
+            accept DeliveryAcceptance (ShrimpsTruck : ShrimpsDelivery) do
+               Put_Line("Pracownik: Przyjelismy ladunek o ID: " & ShrimpsTruck.Id'Image & ", Towar: " & ShrimpsTruck.Commodity & ", Ilosc: " & ShrimpsTruck.Quantity'Image);
                Put_Line("Pracownik: Rozpoczynamy rozladunek");
                
                DelayTime := Randomizing.Random(Gen);
                delay Duration(DelayTime); 
                Put_Line("Pracownik: Skonczylismy, czekamy na kolejne auta");
-            end Przyjecie_dostawy;
+            end DeliveryAcceptance;
          or
-            accept Zakoncz;
+            accept Finish;
             End_Of_Shift := True;
          end select;   
       end loop;
