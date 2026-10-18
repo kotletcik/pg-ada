@@ -9,13 +9,13 @@ package body Kukiriniarz is
       while not Is_End loop
          select
             accept Transport (ShrimpType : Character; Quantity : Integer) do
-               Put_Line ("[K" & Id & "] Otrzymano zadanie transportu");
+               Put_Line ("[K" & Id'Image & "] Otrzymano zadanie transportu");
 
-               Put_Line ("[K" & Id & "] Jedzie do magazynu...");
+               Put_Line ("[K" & Id'Image & "] Jedzie do magazynu...");
                delay 4.0;
             
                Warehouse.Storage.Accept_Delivery (ShrimpType, Quantity);
-               Put_Line ("[K" & Id & "] Dostarczono towar, kukiriniarz ma wolne");
+               Put_Line ("[K" & Id'Image & "] Dostarczono towar, kukiriniarz ma wolne");
             end Transport;
          or
             accept Finish;
@@ -23,6 +23,6 @@ package body Kukiriniarz is
          end select;
       end loop;
 
-      Put_Line ("[K" & Id & "] Koniec pracy kukiriniarza");
+      Put_Line ("[K" & Id'Image & "] Koniec pracy kukiriniarza");
    end Kid;
 end Kukiriniarz;
