@@ -5,12 +5,11 @@ with Logging;
 
 
 procedure main is
-   -- w taki sposob definiuje sie losowanie liczb calkowitych, z poradnika
-   -- wybieramy zakres
+   -- Zakres losowanych opoznien.
 
    subtype OurDelay is Integer range 1 .. 10;
    
-   -- The random package supplies realistic delays between incoming cars.
+   -- Pakiet do losowania opoznien.
    package Randomizing is
    new Ada.Numerics.Discrete_Random(OurDelay);
    
@@ -18,7 +17,7 @@ procedure main is
    DelayTime : OurDelay;
    New_Delivery : Delivery.ShrimpsDelivery;
 
-   --tworzenie kukiriniarzy
+   -- Tworzenie pracownikow.
    KukiriniarzG2 : Kukiriniarz.Kid (Kukiriniarz.G2);
    KukiriniarzG4 : Kukiriniarz.Kid (Kukiriniarz.G4);
 begin
@@ -26,7 +25,7 @@ begin
    Randomizing.Reset (Gen);
    for I in 1 .. 10 loop
       
-      --tworzenie dostaw
+      -- Tworzenie dostawy.
       New_Delivery.Id := I;
       New_Delivery.Towar := "Krewetki";
       New_Delivery.Ilosc := Randomizing.Random(Gen);
@@ -34,7 +33,7 @@ begin
         ("Przyjechal samochod" & Integer'Image (I)
          & " i czeka na rozladunek");
      
-      -- The entry call blocks until the unloading task accepts the delivery.
+      -- Oczekiwanie na przyjecie dostawy.
       Delivery.Unloading.Przyjecie_dostawy(New_Delivery);
       
       DelayTime := Randomizing.Random(Gen);
@@ -44,4 +43,5 @@ begin
    end loop;
    Delivery.Unloading.Zakoncz;
    KukiriniarzG2.Finish;
+   KukiriniarzG4.Finish;
 end main;

@@ -1,11 +1,10 @@
 with Logging;
---  Mamy pakiet dostaw, głównym zadaniem jest symulacja rozładunku
---  Dodatkowo mamy taska konczacego robote 
 package body Delivery is
-   -- This task accepts one car at a time and simulates unloading it.
+   -- Task odpowiedzialny za przyjmowanie i rozladunek dostaw.
    task body Unloading is
       End_Of_Shift : Boolean := False;
    begin
+      -- Obsluga dostaw trwa do zakonczenia zmiany.
       while not End_Of_Shift loop
          select
             accept Przyjecie_dostawy (ShrimpsTruck : ShrimpsDelivery) do

@@ -6,7 +6,7 @@ with Logging;
 procedure Pg_Ada is
    subtype OurDelay is Integer range 1 .. 10;
 
-   -- Generator controls both the delivery quantity and the delay between cars.
+   -- Generator losuje ilosc dostawy i opoznienie.
    package Randomizing is
       new Ada.Numerics.Discrete_Random (OurDelay);
 
@@ -14,11 +14,11 @@ procedure Pg_Ada is
    DelayTime : OurDelay;
    New_Delivery : Delivery.ShrimpsDelivery;
 
-   -- Both workers are Ada tasks and can run independently of the main task.
+   -- Pracownicy dzialaja jako niezalezne taski.
    KukiriniarzG2 : Kukiriniarz.Kid (Kukiriniarz.G2);
    KukiriniarzG4 : Kukiriniarz.Kid (Kukiriniarz.G4);
 begin
-   -- All timestamps are measured from this point until program termination.
+   -- Od tego momentu mierzony jest czas programu.
    Logging.Start;
    Randomizing.Reset (Gen);
 
@@ -31,14 +31,15 @@ begin
         ("Przyjechal samochod" & Integer'Image (I)
          & " i czeka na rozladunek");
 
-      -- Calling an entry synchronizes the car with the unloading task.
+      -- Entry synchronizuje samochod z taskiem rozladunku.
       Delivery.Unloading.Przyjecie_dostawy (New_Delivery);
 
       DelayTime := Randomizing.Random (Gen);
       delay Duration (DelayTime);
    end loop;
 
-   -- Finish entries let each task leave its main loop in an orderly way.
+   -- Zakonczenie pracy taskow.
    Delivery.Unloading.Zakoncz;
    KukiriniarzG2.Finish;
+   KukiriniarzG4.Finish;
 end Pg_Ada;
