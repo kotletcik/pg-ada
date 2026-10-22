@@ -1,20 +1,21 @@
-with Logging;
+with Ada.Text_IO;
+use Ada.Text_IO;
 with Warehouse;
 -- komentarz
 package body Kukiriniarz is
-   -- Pracownik czeka na zadanie albo koniec zmiany.
    task body Kid is
       Is_End : Boolean := False;
    begin
       while not Is_End loop
          select
             accept Transport (ShrimpType : Character; Quantity : Integer) do
-               Logging.Put_Line ("[K" & Id'Image & "] Otrzymano zadanie transportu");
-               Logging.Put_Line ("[K" & Id'Image & "] Jedzie do magazynu...");
+               Put_Line ("[K" & Id'Image & "] Otrzymano zadanie transportu");
+
+               Put_Line ("[K" & Id'Image & "] Jedzie do magazynu...");
                delay 4.0;
             
                Warehouse.Storage.Accept_Delivery (ShrimpType, Quantity);
-               Logging.Put_Line ("[K" & Id'Image & "] Dostarczono towar, kukiriniarz ma wolne");
+               Put_Line ("[K" & Id'Image & "] Dostarczono towar, kukiriniarz ma wolne");
             end Transport;
          or
             accept Finish;
@@ -22,6 +23,6 @@ package body Kukiriniarz is
          end select;
       end loop;
 
-      Logging.Put_Line ("[K" & Id'Image & "] Koniec pracy kukiriniarza");
+      Put_Line ("[K" & Id'Image & "] Koniec pracy kukiriniarza");
    end Kid;
 end Kukiriniarz;
