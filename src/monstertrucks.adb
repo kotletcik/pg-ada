@@ -18,4 +18,4 @@ package body MonsterTrucks is
       Put_Line("Mafia Krewetkowa: MonsterTruck " & TruckCargo.Id'Image & " wraca pusty do bazy.");
       accept Departure;
    end Truck;
-end MonsterTrucks;
+end MonsterTrucks;-- komentarz

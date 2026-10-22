@@ -6,6 +6,9 @@ with Kukiriniarz;
 with Warehouse;
 with MonsterTrucks;
 
+-- komentarz
+
+
 procedure main is
    -- w taki sposob definiuje sie losowanie liczb calkowitych, z poradnika
    -- wybieramy zakres

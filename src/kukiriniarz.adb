@@ -1,7 +1,7 @@
 with Ada.Text_IO;
 use Ada.Text_IO;
 with Warehouse;
-
+-- komentarz
 package body Kukiriniarz is
    task body Kid is
       Is_End : Boolean := False;

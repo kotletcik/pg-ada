@@ -11,4 +11,4 @@ package Delivery is
       entry DeliveryAcceptance (ShrimpsTruck : ShrimpsDelivery);
       entry Finish;
    end Unloading;
-end Delivery;
+end Delivery;-- komentarz
