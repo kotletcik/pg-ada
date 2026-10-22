@@ -25,10 +25,10 @@ package body Kukiriniarz is
 
                --  Jeśli poziom baterii jest niski, to kukiriniarz jedzie do stacji ladowania
                if Batery_Level < Level_Needed then
-                  Put_Line ("[K" & Id'Image & "] Poziom baterii niski, jadę do stacji ladowania...");
+                  Put_Line ("[K" & Id'Image & "] Poziom baterii niski, jade do stacji ladowania...");
                   Charger.Charging.Start_Charging (Id'Image);
                   Batery_Level := 100;
-                  Put_Line ("[K" & Id'Image & "] Naładowany, poziom baterii: " & Batery_Level'Image);
+                  Put_Line ("[K" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
                end if;
 
 

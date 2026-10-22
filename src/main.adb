@@ -1,54 +1,53 @@
 with Ada.Numerics.Discrete_Random;
 with Ada.Text_IO;
 use Ada.Text_IO;
-with Delivery;
+with Unloading_Point;
 with Kukiriniarz;
 with Warehouse;
 with MonsterTrucks;
 
--- komentarz
-
-
 procedure main is
-   -- w taki sposob definiuje sie losowanie liczb calkowitych, z poradnika
-   -- wybieramy zakres
-
-   subtype OurDelay is Integer range 1 .. 10;
+   -- opoznienie przyjazdu cieazrowki
+   subtype OurDelay is Integer range 1 .. 5;
+   package Delay_Randomizing is new Ada.Numerics.Discrete_Random(OurDelay);
+   Gen : Delay_Randomizing.Generator;
    
-   -- tworzymy pakiet dla liczb losowych
-   package Randomizing is
-   new Ada.Numerics.Discrete_Random(OurDelay);
-   
-   -- tworzymy generator
-   Gen : Randomizing.Generator;
-   -- zmienna z nasza losowa liczba
-   DelayTimeTrucks : OurDelay;
+   -- ilosc krewetek w ciezarowce
+   subtype CommodityQuantity is Integer range 2 .. 10;
+   package Quantity_Randomizing is new Ada.Numerics.Discrete_Random(CommodityQuantity);
+   Quantity_Gen : Quantity_Randomizing.Generator;
 
-   -- tworzenie dostawczakow
+   -- generator dla nazw kreweretk
+   package Shrimp_Randomizing is new Ada.Numerics.Discrete_Random(Unloading_Point.Shrimp_Name);
+   Shrimp_Gen : Shrimp_Randomizing.Generator;
+
    TrucksMonster : Array(1 .. 10) of MonsterTrucks.Truck;
 
-   --tworzenie kukiriniarzy
    KukiriniarzG2 : Kukiriniarz.Kid (Kukiriniarz.Skiba_Kukiriniarz);
    KukiriniarzG4 : Kukiriniarz.Kid (Kukiriniarz.Maniek_Kukiriniarz);
 begin
-   Randomizing.Reset(Gen);
-   -- losowe wysylanie ciezarowek
-    
+   Delay_Randomizing.Reset(Gen);
+   Quantity_Randomizing.Reset(Quantity_Gen);
+   Shrimp_Randomizing.Reset(Shrimp_Gen);
+   
+   -- petla od tworzenia monstertuckow, nasze wsm glowne dzialanie jak narazie,
+   -- bo technik geminista nie zrobil ladnego warehousea
    for I in TrucksMonster'Range loop
-      DelayTimeTrucks := Randomizing.Random(Gen);
-      delay Duration(DelayTimeTrucks);
-
       TrucksMonster(I).Start(
          Id => I,
-         Quantity => Randomizing.Random(Gen) *10
+         Quantity => Quantity_Randomizing.Random(Quantity_Gen) * 10,
+         Travel_Time => Delay_Randomizing.Random(Gen),
+         Shrimp_Name => Shrimp_Randomizing.Random(Shrimp_Gen)
       );
    end loop;
+   -- petla, ktora koncz dzialanie kazde trucka, dzieki niej program sie konczy inaczej wisialby w nieskonczonosc
    for I in TrucksMonster'Range loop
       TrucksMonster(I).Departure;
    end loop;
-   Delivery.Unloading.Finish;
+   
+   Unloading_Point.Unloading.Finish;
    KukiriniarzG2.Finish;
    KukiriniarzG4.Finish;
-   -- Wyświetlamy stan magazynu
+   
    Warehouse.Storage.Check_Stock;
 end main;

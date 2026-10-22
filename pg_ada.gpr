@@ -19,4 +19,8 @@ project Pg_Ada is
       for Artifacts (".") use ("share");
    end Install;
 
+   package Builder is
+   for Executable ("main.adb") use "main1";
+end Builder;
+
 end Pg_Ada;
