@@ -1,9 +1,7 @@
 with Ada.Numerics.Discrete_Random;
 with Logging;
---  Mamy pakiet dostaw, głównym zadaniem jest symulacja rozładunku
---  Dodatkowo mamy taska konczacego robote 
 package body Delivery is
-   -- This task accepts one car at a time and simulates unloading it.
+   -- Task odpowiedzialny za przyjmowanie i rozladunek dostaw.
    task body Unloading is
       End_Of_Shift : Boolean := False;
       Subtype OurDelay is Integer range 1 .. 5;
@@ -17,6 +15,7 @@ package body Delivery is
       -- zmienna z nasza losowa liczba
       DelayTime : OurDelay;
    begin
+      -- Obsluga dostaw trwa do zakonczenia zmiany.
       while not End_Of_Shift loop
          select
             accept DeliveryAcceptance (ShrimpsTruck : ShrimpsDelivery) do

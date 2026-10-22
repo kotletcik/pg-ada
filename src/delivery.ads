@@ -1,12 +1,12 @@
 package Delivery is
    
-   -- Nasza dostawa krewetek
+   -- Dane dostawy krewetek.
    type ShrimpsDelivery is record
       Id    : Integer;
       Commodity : String(1 .. 8);
       Quantity : Integer;
    end record;
-   -- deklaracja tasków, przyjecie dostawy i koniec zmiany
+   -- Przyjecie dostawy i koniec zmiany.
    task Unloading is
       entry DeliveryAcceptance (ShrimpsTruck : ShrimpsDelivery);
       entry Finish;

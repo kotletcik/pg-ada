@@ -2,7 +2,7 @@ with Logging;
 with Warehouse;
 
 package body Kukiriniarz is
-   -- A worker waits for transport requests or for the end-of-shift entry.
+   -- Pracownik czeka na zadanie albo koniec zmiany.
    task body Kid is
       Is_End : Boolean := False;
    begin
