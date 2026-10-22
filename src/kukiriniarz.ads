@@ -4,4 +4,4 @@ package Kukiriniarz is
       entry Transport (ShrimpType : Character; Quantity : Integer);
       entry Finish;
    end Kid;
-end Kukiriniarz;
+end Kukiriniarz;-- komentarz

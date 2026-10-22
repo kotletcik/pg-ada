@@ -5,6 +5,9 @@ with Kukiriniarz;
 with Warehouse;
 with MonsterTrucks;
 
+-- komentarz
+
+
 procedure main is
    -- Zakres losowanych opoznien.
 

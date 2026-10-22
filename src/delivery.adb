@@ -1,7 +1,7 @@
 with Ada.Numerics.Discrete_Random;
-with Logging;
-package body Delivery is
-   -- Task odpowiedzialny za przyjmowanie i rozladunek dostaw.
+--  Mamy pakiet dostaw, głównym zadaniem jest symulacja rozładunku
+--  Dodatkowo mamy taska konczacego robote 
+package body Delivery is-- komentarz
    task body Unloading is
       End_Of_Shift : Boolean := False;
       Subtype OurDelay is Integer range 1 .. 5;

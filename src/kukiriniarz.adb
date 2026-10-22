@@ -1,6 +1,6 @@
 with Logging;
 with Warehouse;
-
+-- komentarz
 package body Kukiriniarz is
    -- Pracownik czeka na zadanie albo koniec zmiany.
    task body Kid is

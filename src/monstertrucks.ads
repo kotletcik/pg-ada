@@ -3,4 +3,4 @@ package MonsterTrucks is
       entry Start(Id : Integer; Quantity : Integer);
       entry Departure;
    end Truck;
-end MonsterTrucks;
+end MonsterTrucks;-- komentarz

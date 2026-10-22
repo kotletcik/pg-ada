@@ -12,7 +12,7 @@ package body Warehouse is
       -- Zmienna pomocnicza
       Max_Capacity : constant Integer := 100;
    begin
-      loop
+      loop-- komentarz
          select
             -- Akceptujemy dostawę TYLKO, gdy jest miejsce w magazynie
             when (Goods_A + Goods_B + Goods_C) < Max_Capacity =>
