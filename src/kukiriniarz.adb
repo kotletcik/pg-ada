@@ -1,20 +1,20 @@
-with Ada.Text_IO;
-use Ada.Text_IO;
+with Logging;
 
 package body Kukiriniarz is
+   -- A worker waits for transport requests or for the end-of-shift entry.
    task body Kid is
       Is_End : Boolean := False;
    begin
       while not Is_End loop
          select
             accept Transport (ShrimpType : Character; Quantity : Integer) do
-               Put_Line ("[K" & Id & "] Otrzymano zadanie transportu");
+               Logging.Put_Line ("[K" & Id'Image & "] Otrzymano zadanie transportu");
             end Transport;
 
-            Put_Line ("[K" & Id & "] Jedzie do magazynu...");
+            Logging.Put_Line ("[K" & Id'Image & "] Jedzie do magazynu...");
             delay 4.0;
 
-            Put_Line ("[K" & Id & "] Dostarczono towar, kukiriniarz ma wolne");
+            Logging.Put_Line ("[K" & Id'Image & "] Dostarczono towar, kukiriniarz ma wolne");
 
          or
             accept Finish;
@@ -22,6 +22,6 @@ package body Kukiriniarz is
          end select;
       end loop;
 
-      Put_Line ("[K" & Id & "] Koniec pracy kukiriniarza");
+      Logging.Put_Line ("[K" & Id'Image & "] Koniec pracy kukiriniarza");
    end Kid;
 end Kukiriniarz;

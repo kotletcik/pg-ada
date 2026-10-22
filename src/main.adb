@@ -1,8 +1,7 @@
 with Ada.Numerics.Discrete_Random;
-with Ada.Text_IO;
-use Ada.Text_IO;
 with Delivery;
 with Kukiriniarz;
+with Logging;
 
 
 procedure main is
@@ -11,31 +10,31 @@ procedure main is
 
    subtype OurDelay is Integer range 1 .. 10;
    
-   -- tworzymy pakiet dla liczb losowych
+   -- The random package supplies realistic delays between incoming cars.
    package Randomizing is
    new Ada.Numerics.Discrete_Random(OurDelay);
    
-   -- tworzymy generator
    Gen : Randomizing.Generator;
-   -- zmienna z nasza losowa liczba
    DelayTime : OurDelay;
    New_Delivery : Delivery.ShrimpsDelivery;
 
    --tworzenie kukiriniarzy
-   KukiriniarzG2 : Kukiriniarz.Kid ("G2");
-   KukiriniarzG4 : Kukiriniarz.Kid ("G4");
+   KukiriniarzG2 : Kukiriniarz.Kid (Kukiriniarz.G2);
+   KukiriniarzG4 : Kukiriniarz.Kid (Kukiriniarz.G4);
 begin
-   Randomizing.Reset(Gen);
+   Logging.Start;
+   Randomizing.Reset (Gen);
    for I in 1 .. 10 loop
       
       --tworzenie dostaw
       New_Delivery.Id := I;
       New_Delivery.Towar := "Krewetki";
       New_Delivery.Ilosc := Randomizing.Random(Gen);
-      Put_line("Przyjechal samochod"  & Integer'Image(I) & " i czeka na rozladunek");
+      Logging.Put_Line
+        ("Przyjechal samochod" & Integer'Image (I)
+         & " i czeka na rozladunek");
      
-      -- Wywołanie naszego spotkania, dwa taski
-      -- się synchronizują
+      -- The entry call blocks until the unloading task accepts the delivery.
       Delivery.Unloading.Przyjecie_dostawy(New_Delivery);
       
       DelayTime := Randomizing.Random(Gen);
