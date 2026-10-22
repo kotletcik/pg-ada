@@ -1,8 +1,9 @@
 with Ada.Numerics.Discrete_Random;
+with Logging;
 with Delivery;
 with Kukiriniarz;
-with Logging;
-
+with Warehouse;
+with MonsterTrucks;
 
 procedure main is
    -- Zakres losowanych opoznien.
@@ -14,9 +15,13 @@ procedure main is
    new Ada.Numerics.Discrete_Random(OurDelay);
    
    Gen : Randomizing.Generator;
-   DelayTime : OurDelay;
-   New_Delivery : Delivery.ShrimpsDelivery;
+   -- zmienna z nasza losowa liczba
+   DelayTimeTrucks : OurDelay;
 
+   -- tworzenie dostawczakow
+   TrucksMonster : Array(1 .. 10) of MonsterTrucks.Truck;
+
+<<<<<<< HEAD
    -- Tworzenie pracownikow.
    KukiriniarzG2 : Kukiriniarz.Kid (Kukiriniarz.G2);
    KukiriniarzG4 : Kukiriniarz.Kid (Kukiriniarz.G4);
@@ -40,8 +45,34 @@ begin
       delay Duration(DelayTime);
 
 
+=======
+   --tworzenie kukiriniarzy
+   KukiriniarzG2 : Kukiriniarz.Kid (Kukiriniarz.Skiba_Kukiriniarz);
+   KukiriniarzG4 : Kukiriniarz.Kid (Kukiriniarz.Maniek_Kukiriniarz);
+begin
+   Logging.Start;
+   Randomizing.Reset (Gen);
+   -- losowe wysylanie ciezarowek
+     
+   for I in TrucksMonster'Range loop
+      DelayTimeTrucks := Randomizing.Random(Gen);
+      delay Duration(DelayTimeTrucks);
+      Logging.Put_Line ("Przyjechal samochod" & Integer'Image (I) & " i czeka na rozladunek");
+      TrucksMonster(I).Start(
+         Id => I,
+         Quantity => Randomizing.Random(Gen) *10
+      );
+>>>>>>> 78b162657467158cae6c590e3165a7609206b1b1
    end loop;
-   Delivery.Unloading.Zakoncz;
+   for I in TrucksMonster'Range loop
+      TrucksMonster(I).Departure;
+   end loop;
+   Delivery.Unloading.Finish;
    KukiriniarzG2.Finish;
    KukiriniarzG4.Finish;
+<<<<<<< HEAD
+=======
+   -- Wyświetlamy stan magazynu
+   Warehouse.Storage.Check_Stock;
+>>>>>>> 78b162657467158cae6c590e3165a7609206b1b1
 end main;
