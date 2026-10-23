@@ -4,6 +4,29 @@ with Warehouse;
 with Charger;
 
 package body Kukiriniarz is
+   Kukiriniarz_G2 : Kid (Skiba_Kukiriniarz);
+   Kukiriniarz_G4 : Kid (Maniek_Kukiriniarz);
+   Next_Kukiriniarz : Kukiriniarz_Name := Skiba_Kukiriniarz;
+
+   procedure Assign_Transport
+     (Shrimp_Type : Unloading_Point.Shrimp_Name;
+      Quantity : Integer) is
+   begin
+      if Next_Kukiriniarz = Skiba_Kukiriniarz then
+         Kukiriniarz_G2.Transport (Shrimp_Type, Quantity);
+         Next_Kukiriniarz := Maniek_Kukiriniarz;
+      else
+         Kukiriniarz_G4.Transport (Shrimp_Type, Quantity);
+         Next_Kukiriniarz := Skiba_Kukiriniarz;
+      end if;
+   end Assign_Transport;
+
+   procedure Finish_All is
+   begin
+      Kukiriniarz_G2.Finish;
+      Kukiriniarz_G4.Finish;
+   end Finish_All;
+
    task body Kid is
       Is_End : Boolean := False;
 

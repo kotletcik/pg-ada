@@ -1,5 +1,6 @@
 with Ada.Text_IO;
 use Ada.Text_IO;
+with Kukiriniarz;
 
 package body Unloading_Point is
    --  kolejka  obsluguje dostawy przychodzace
@@ -81,6 +82,10 @@ package body Unloading_Point is
          delay Duration(Float(Delivery.Quantity) * 0.2);
          Put_Line("Pracownik: Zakonczylismy rozladunek Monstertrucka"
             & Delivery.Id'Image);
+         Kukiriniarz.Assign_Transport
+           (Delivery.Commodity, Delivery.Quantity);
       end loop;
+
+      accept Wait_Until_Done;
    end Unloading;
 end Unloading_Point;
