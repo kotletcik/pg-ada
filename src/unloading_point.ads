@@ -30,4 +30,4 @@ package Unloading_Point is
    -- Task pracownika pobierajacy dostawy z kolejki.
    task Unloading is
    end Unloading;
-end Unloading_Point;-- komentarz
+end Unloading_Point;

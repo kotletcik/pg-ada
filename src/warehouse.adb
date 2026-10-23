@@ -1,37 +1,34 @@
 with Ada.Text_IO; 
 use Ada.Text_IO;
+with Unloading_Point;
 
 package body Warehouse is
 
    task body Storage is
-      -- Stan różnych rodzajów towarów
-      Goods_A : Integer := 0;
-      Goods_B : Integer := 0;
-      Goods_C : Integer := 0;
+      Max_Capacity : constant Integer := 1000;
 
-      -- Zmienna pomocnicza
-      Max_Capacity : constant Integer := 100;
+      Shrimp_Stock : array (Unloading_Point.Shrimp_Name) of Integer := (others => 0);
+      Total_Shrimps : Integer := 0;
    begin
-      loop-- komentarz
+      loop
          select
-            -- Akceptujemy dostawę TYLKO, gdy jest miejsce w magazynie
-            when (Goods_A + Goods_B + Goods_C) < Max_Capacity =>
-               accept Accept_Delivery (GoodType : Character; Quantity : Integer) do
-                  -- Zwiekszamy ilość towaru w magazynie w zależności od typu
-                  if GoodType = 'A' then
-                     Goods_A := Goods_A + Quantity;
-                  elsif GoodType = 'B' then
-                     Goods_B := Goods_B + Quantity;
-                  elsif GoodType = 'C' then
-                     Goods_C := Goods_C + Quantity;
-                  end if;
-                  Put_Line ("[M] Przyjeto dostawe: " & Quantity'Image & " sztuk towaru typu " & GoodType'Image);
+            -- Akceptujemy dostawę TYLKO, gdy jest miejsce
+            when Total_Shrimps < Max_Capacity =>
+               accept Accept_Delivery (Shrimp_Type : Unloading_Point.Shrimp_Name; Quantity : Integer) do
+                  Shrimp_Stock(Shrimp_Type) := Shrimp_Stock(Shrimp_Type) + Quantity;
+                  Total_Shrimps := Total_Shrimps + Quantity;
+                  Put_Line ("[M] Przyjeto dostawe: " & Quantity'Image & " sztuk, rodzaj: " & Shrimp_Type'Image);
                end Accept_Delivery;
 
          or
             -- Wyświetlamy stan magazynu
             accept Check_Stock do
-               Put_Line ("[M] Stan magazynu: A: " & Goods_A'Image & ", B: " & Goods_B'Image & ", C: " & Goods_C'Image);
+               Put_Line ("[M] --- STAN MAGAZYNU KREWETEK ---");
+               for Krewetka in Unloading_Point.Shrimp_Name loop
+                  Put_Line ("[M] " & Krewetka'Image & ": " & Shrimp_Stock(Krewetka)'Image);
+               end loop;
+               Put_Line ("[M] Calkowite zapelnienie: " & Total_Shrimps'Image & " / " & Max_Capacity'Image);
+               Put_Line ("[M] --------------------------------");
             end Check_Stock;
          or
             terminate;
