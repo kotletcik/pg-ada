@@ -29,8 +29,6 @@ procedure main is
 
    TrucksMonster : Array(1 .. 10) of MonsterTrucks.Truck;
 
-   KukiriniarzG2 : Kukiriniarz.Kid (Kukiriniarz.Skiba_Kukiriniarz);
-   KukiriniarzG4 : Kukiriniarz.Kid (Kukiriniarz.Maniek_Kukiriniarz);
 begin
    Delay_Randomizing.Reset(Gen);
    Quantity_Randomizing.Reset(Quantity_Gen);
@@ -55,8 +53,8 @@ begin
    end loop;
    
    Unloading_Point.Queue.Close;
-   KukiriniarzG2.Finish;
-   KukiriniarzG4.Finish;
+   Unloading_Point.Unloading.Wait_Until_Done;
+   Kukiriniarz.Finish_All;
    
    Warehouse.Storage.Check_Stock;
 end main;

@@ -29,5 +29,6 @@ package Unloading_Point is
 
    -- Task pracownika pobierajacy dostawy z kolejki.
    task Unloading is
+      entry Wait_Until_Done;
    end Unloading;
 end Unloading_Point;
