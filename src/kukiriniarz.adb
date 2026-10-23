@@ -2,7 +2,7 @@ with Ada.Text_IO;
 use Ada.Text_IO;
 with Warehouse;
 with Charger;
--- komentarz
+
 package body Kukiriniarz is
    task body Kid is
       Is_End : Boolean := False;
@@ -12,13 +12,13 @@ package body Kukiriniarz is
    begin
       while not Is_End loop
          select
-            accept Transport (ShrimpType : Character; Quantity : Integer) do
+            accept Transport (Shrimp_Type : Unloading_Point.Shrimp_Name; Quantity : Integer) do
                Put_Line ("[K" & Id'Image & "] Otrzymano zadanie transportu");
 
                Put_Line ("[K" & Id'Image & "] Jedzie do magazynu...");
                delay 4.0;
             
-               Warehouse.Storage.Accept_Delivery (ShrimpType, Quantity);
+               Warehouse.Storage.Accept_Delivery (Shrimp_Type, Quantity);
 
                Batery_Level := Batery_Level - Level_Needed;
                Put_Line ("[K" & Id'Image & "] Poziom baterii: " & Batery_Level'Image);

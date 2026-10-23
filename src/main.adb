@@ -38,7 +38,8 @@ begin
    Priority_randomize.Reset(Priority_Gen);
    
    -- petla od tworzenia monstertuckow, nasze wsm glowne dzialanie jak narazie,
-   -- bo technik geminista nie zrobil ladnego warehousea ~ +1 byczku wariacie 
+   -- bo technik geminista nie zrobil ladnego warehousea ~ +1 byczku wariacie
+   -- damn ☺
    for I in TrucksMonster'Range loop
       TrucksMonster(I).Start(
          Id => I,
