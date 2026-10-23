@@ -7,10 +7,11 @@ package body MonsterTrucks is
       Delay_Time : Integer;
    begin
       -- to jest po prostu stworzenie ciezarowki
-      accept Start(Id : Integer; Quantity : Integer; Travel_Time : Integer; Shrimp_Name : Unloading_Point.Shrimp_Name) do
+      accept Start(Id : Integer; Quantity : Integer; Travel_Time : Integer; Shrimp_Name : Unloading_Point.Shrimp_Name; Priority : Boolean) do
          TruckCargo.Id := Id;
          TruckCargo.Commodity := Shrimp_Name;
          TruckCargo.Quantity := Quantity;
+         TruckCargo.Priority := Priority;
          Delay_Time := Travel_Time;
       end Start; 
       -- tutaj sie taski spotykaja, jezeli jakas ciezarowka

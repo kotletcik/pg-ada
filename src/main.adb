@@ -21,6 +21,12 @@ procedure main is
    package Shrimp_Randomizing is new Ada.Numerics.Discrete_Random(Unloading_Point.Shrimp_Name);
    Shrimp_Gen : Shrimp_Randomizing.Generator;
 
+   -- 1/4 szansy na zamowienie priorytetowe
+   subtype PriorityChance is Integer range 1 .. 4;
+   package Priority_randomize is new Ada.Numerics.Discrete_Random(PriorityChance);
+   Priority_Gen : Priority_randomize.Generator;
+
+
    TrucksMonster : Array(1 .. 10) of MonsterTrucks.Truck;
 
    KukiriniarzG2 : Kukiriniarz.Kid (Kukiriniarz.Skiba_Kukiriniarz);
@@ -29,6 +35,7 @@ begin
    Delay_Randomizing.Reset(Gen);
    Quantity_Randomizing.Reset(Quantity_Gen);
    Shrimp_Randomizing.Reset(Shrimp_Gen);
+   Priority_randomize.Reset(Priority_Gen);
    
    -- petla od tworzenia monstertuckow, nasze wsm glowne dzialanie jak narazie,
    -- bo technik geminista nie zrobil ladnego warehousea
@@ -37,7 +44,8 @@ begin
          Id => I,
          Quantity => Quantity_Randomizing.Random(Quantity_Gen) * 10,
          Travel_Time => Delay_Randomizing.Random(Gen),
-         Shrimp_Name => Shrimp_Randomizing.Random(Shrimp_Gen)
+         Shrimp_Name => Shrimp_Randomizing.Random(Shrimp_Gen),
+         Priority => Priority_randomize.Random(Priority_Gen) = 4
       );
    end loop;
    -- petla, ktora koncz dzialanie kazde trucka, dzieki niej program sie konczy inaczej wisialby w nieskonczonosc

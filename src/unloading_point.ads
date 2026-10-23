@@ -5,6 +5,7 @@ package Unloading_Point is
       Id    : Integer;
       Commodity : Shrimp_Name;
       Quantity : Integer;
+      Priority : Boolean;
    end record;
    -- deklaracja tasków, przyjecie dostawy i koniec zmiany
    task Unloading is
