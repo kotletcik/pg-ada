@@ -2,29 +2,85 @@ with Ada.Text_IO;
 use Ada.Text_IO;
 
 package body Unloading_Point is
+   --  kolejka  obsluguje dostawy przychodzace
+   -- rownoczesnie z wielu taskow
+   protected body Delivery_Queue is
+      --  aktualna liczba dostaw w obu kolejkach
+      procedure Print_State is
+      begin
+         Put_Line("Kolejka priorytetowa: " & Integer'Image(Priority_Count)
+            & " | kolejka zwykla: " & Integer'Image(Normal_Count));
+      end Print_State;
+
+      procedure Add (Delivery : ShrimpsDelivery) is
+      begin
+         -- Priorytet decyduje, do ktorej kolejki trafia dostawa
+         if Delivery.Priority then
+            Priority_Count := Priority_Count + 1;
+            Priority_Deliveries(Priority_Count) := Delivery;
+            Put_Line("Przyjechalo zamowienie priorytetowe nr"
+               & Delivery.Id'Image);
+         else
+            Normal_Count := Normal_Count + 1;
+            Normal_Deliveries(Normal_Count) := Delivery;
+            Put_Line("Przyjechalo zwykle zamowienie nr"
+               & Delivery.Id'Image);
+         end if;
+         Print_State;
+      end Add;
+
+      entry Take (Delivery : out ShrimpsDelivery;
+                  Available : out Boolean)
+         when Priority_Count > 0 or Normal_Count > 0 or Closed is
+      begin
+         -- Zawsze najpierw obslugujemy zamowienie priorytetowe
+         if Priority_Count > 0 then
+            Available := True;
+            Delivery := Priority_Deliveries(1);
+            -- Przesuwamy pozostale elementy
+            for I in 1 .. Priority_Count - 1 loop
+               Priority_Deliveries(I) := Priority_Deliveries(I + 1);
+            end loop;
+            Priority_Count := Priority_Count - 1;
+         elsif Normal_Count > 0 then
+            Available := True;
+            Delivery := Normal_Deliveries(1);
+            -- Jezeli nie ma priorytetow, pobieramy zwykle zamowienie
+            for I in 1 .. Normal_Count - 1 loop
+               Normal_Deliveries(I) := Normal_Deliveries(I + 1);
+            end loop;
+            Normal_Count := Normal_Count - 1;
+         else
+            Available := False;
+         end if;
+         if Available then
+            Print_State;
+         end if;
+      end Take;
+
+      procedure Close is
+      begin
+         -- Po zamknieciu nie przyjmujemy juz nowych dostaw.
+         Closed := True;
+      end Close;
+   end Delivery_Queue;
+
    task body Unloading is
-      End_Of_Shift : Boolean := False;
+      Delivery : ShrimpsDelivery;
+      Available : Boolean;
    begin
-      while not End_Of_Shift loop
-         select
-            -- to jest nasz glowny punkt rozladunkowy
-            -- tutaj zaczynamy rozladunek, kazda ciezarowka 
-            -- jest rozladowywana odpowiednio dlugow w zaleznosci od ilosci krewetek
-            accept DeliveryAcceptance (ShrimpsTruck : ShrimpsDelivery) do
-               Put_Line("Pracownik: Rozpoczynamy rozladunek Monstertrucka" & ShrimpsTruck.Id'Image);
-               Put_Line("Pracownik: Aktualnie w kolejce czeka " & DeliveryAcceptance'Count'Image & " innych aut");
-               -- tutaj wykazalem sie sprytem Wiktorii               
-               delay Duration(Float(ShrimpsTruck.Quantity) * 0.2); 
-               Put_Line("Pracownik: Zakonczylismy rozladunek Monstertrucka" & ShrimpsTruck.Id'Image);
-            end DeliveryAcceptance;
-            
-            if DeliveryAcceptance'Count = 0 then
-               Put_Line("Pracownik: Skonczylismy, nie ma juz aut w kolejce");
-            end if;
-         or
-            accept Finish;
-            End_Of_Shift := True;
-         end select;   
+      -- Pracownik czeka na dostawy i konczy po zamknieciu pustej kolejki.
+      loop
+         Unloading_Point.Queue.Take(Delivery, Available);
+         exit when not Available;
+
+         -- Gdy dostawa jest dostepna, pobieramy ja zgodnie z priorytetem.
+         Put_Line("Pracownik: Rozpoczynamy rozladunek Monstertrucka"
+            & Delivery.Id'Image);
+         -- Czas rozladunku zalezy od liczby krewetek.
+         delay Duration(Float(Delivery.Quantity) * 0.2);
+         Put_Line("Pracownik: Zakonczylismy rozladunek Monstertrucka"
+            & Delivery.Id'Image);
       end loop;
    end Unloading;
 end Unloading_Point;

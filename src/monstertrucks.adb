@@ -19,7 +19,7 @@ package body MonsterTrucks is
       -- to zaczyna sie jej rozladunek, a tak to czeka na zakonczenie rozladunku innej ciezarowki
       delay Duration(Delay_Time);
       Put_Line("MonsterTruck nr" & TruckCargo.Id'Image & " z " & TruckCargo.Commodity'Image & " dojechal pod pod rozladunek i czeka w kolejce");
-      Unloading_Point.Unloading.DeliveryAcceptance(TruckCargo);
+      Unloading_Point.Queue.Add(TruckCargo);
       Put_Line("MonsterTruck nr" & TruckCargo.Id'Image & " wraca pusty do bazy");
       accept Departure;
    end Truck;

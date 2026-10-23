@@ -8,7 +8,7 @@ with MonsterTrucks;
 
 procedure main is
    -- opoznienie przyjazdu cieazrowki
-   subtype OurDelay is Integer range 1 .. 5;
+   subtype OurDelay is Integer range 1 .. 20;
    package Delay_Randomizing is new Ada.Numerics.Discrete_Random(OurDelay);
    Gen : Delay_Randomizing.Generator;
    
@@ -38,7 +38,7 @@ begin
    Priority_randomize.Reset(Priority_Gen);
    
    -- petla od tworzenia monstertuckow, nasze wsm glowne dzialanie jak narazie,
-   -- bo technik geminista nie zrobil ladnego warehousea
+   -- bo technik geminista nie zrobil ladnego warehousea ~ +1 byczku wariacie 
    for I in TrucksMonster'Range loop
       TrucksMonster(I).Start(
          Id => I,
@@ -53,7 +53,7 @@ begin
       TrucksMonster(I).Departure;
    end loop;
    
-   Unloading_Point.Unloading.Finish;
+   Unloading_Point.Queue.Close;
    KukiriniarzG2.Finish;
    KukiriniarzG4.Finish;
    
