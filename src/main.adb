@@ -6,6 +6,7 @@ with Monitoring_Centre;
 with Data_Analyzer;
 
 procedure main is
+   -- zakresy losowanych wartosci dla symulacji
    -- opoznienie przyjazdu cieazrowki
    subtype OurDelay is Integer range 3 .. 7;
    package Delay_Randomizing is new Ada.Numerics.Discrete_Random(OurDelay);
@@ -29,6 +30,7 @@ procedure main is
    Cumulative_Time : Integer := 0;
 
 begin
+   -- uruchomienie generatorow losowych wartosci
    Delay_Randomizing.Reset(Gen);
    Quantity_Randomizing.Reset(Quantity_Gen);
    Shrimp_Randomizing.Reset(Shrimp_Gen);
@@ -36,6 +38,7 @@ begin
 
    Monitoring_Centre.Screen.Init_Screen;
 
+   -- utworzenie i uruchomienie wszystkich ciezarowek
    for I in TrucksMonster'Range loop
       Cumulative_Time := Cumulative_Time + Delay_Randomizing.Random(Gen);
 
@@ -48,12 +51,14 @@ begin
       );
    end loop;
 
+   -- oczekiwanie na powrot wszystkich ciezarowek
    -- petla, ktora koncz dzialanie kazde trucka, dzieki niej program sie konczy inaczej wisialby w nieskonczonosc
    for I in TrucksMonster'Range loop
       TrucksMonster(I).Departure;
    end loop;
 
    Unloading_Point.Unloading.Wait_Until_Done;
+   -- zakonczenie pracy robotow po obsluzeniu dostaw
    Kukiriniarz.Finish_All;
 
    -- 1. Zatrzymanie zadania Modułu G (zabezpieczenie przed zawieszeniem programu)

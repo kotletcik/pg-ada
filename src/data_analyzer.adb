@@ -7,6 +7,7 @@ with Unloading_Point;
 package body Data_Analyzer is
 
    task body Monitor is
+      -- stan zakonczenia zadania monitorujacego
       Is_End : Boolean := False;
       
       G2_Bat, G4_Bat : Integer;
@@ -20,11 +21,13 @@ package body Data_Analyzer is
 
       function Format_Busy(Is_Busy : Boolean) return String is
       begin
+         -- przygotowanie tekstu opisujacego zajetosc robota
          if Is_Busy then return "pracuje"; else return "wolny  "; end if;
       end Format_Busy;
 
       procedure Refresh_Data is
       begin
+         -- pobranie aktualnych danych robotow i ciezarowek
          Kukiriniarz.Tracker.Get_State(Kukiriniarz.Skiba_Kukiriniarz, G2_Bat, G2_Busy);
          Kukiriniarz.Tracker.Get_State(Kukiriniarz.Maniek_Kukiriniarz, G4_Bat, G4_Busy);
          
@@ -39,9 +42,11 @@ package body Data_Analyzer is
             end case;
          end loop;
          
+         -- pobranie danych magazynu i kolejek
          Warehouse.Storage.Get_State(W_Tygrys, W_Zolt, W_Roz, W_Bial, W_Total, W_Max);
          Unloading_Point.Queue.Get_Stats(Q_Priority, Q_Normal, Q_Served);
          
+         -- wyswietlenie zebranych danych na ekranie
          Monitoring_Centre.Screen.Update_Monitor(23, "Odprawione pojazdy   : " & Q_Served'Image);
          Monitoring_Centre.Screen.Update_Monitor(24, "Flota ciezarowek     : " & W_D'Image & " w drodze |" & Q_Priority'Image & " w kolejce piorytetowej |" & Q_Normal'Image & " w kolejce zwyklej | Wraca: " & P_W'Image & " | W bazie: " & W_B'Image);
          Monitoring_Centre.Screen.Update_Monitor(25, "Kukiriniarz Skiba    : " & Format_Busy(G2_Busy) & " | Bateria: " & G2_Bat'Image & "%");
@@ -50,6 +55,7 @@ package body Data_Analyzer is
       end Refresh_Data;
 
    begin
+      -- cykliczne odswiezanie danych albo oczekiwanie na zakonczenie
       while not Is_End loop
          select
             accept Stop do

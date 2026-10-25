@@ -48,9 +48,11 @@ package body Unloading_Point is
    task body Unloading is
       Done : Boolean := False;
    begin
+      -- obsluga dostaw do momentu zakonczenia symulacji
       while not Done loop
          select
             accept Unload_Priority (Delivery : in ShrimpsDelivery) do
+               -- rozpoczecie obslugi dostawy priorytetowej
                Queue.Leave_Queue(True);
                Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Rozpoczynamy rozladunek Monstertrucka"
                   & Delivery.Id'Image);
@@ -65,6 +67,7 @@ package body Unloading_Point is
          or
             when Unload_Priority'Count = 0 =>
                accept Unload_Normal (Delivery : in ShrimpsDelivery) do
+                  -- obsluga dostawy zwyklej, gdy brak priorytetow
                   Queue.Leave_Queue(False);
                   Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Rozpoczynamy rozladunek Monstertrucka"
                      & Delivery.Id'Image);
@@ -78,6 +81,7 @@ package body Unloading_Point is
                end Unload_Normal;
          or
             when Unload_Priority'Count = 0 and Unload_Normal'Count = 0 =>
+               -- zakonczenie pracy po obsluzeniu wszystkich dostaw
                accept Wait_Until_Done;
                Done := True;
          end select;

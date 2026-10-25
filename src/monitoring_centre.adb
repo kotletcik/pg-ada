@@ -4,6 +4,7 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package body Monitoring_Centre is
 
+   -- znak sterujacy uzywany do obslugi terminala
    ESC : constant Character := Ada.Characters.Latin_1.ESC;
 
    protected body Screen is
@@ -11,6 +12,7 @@ package body Monitoring_Centre is
       -- Wewnętrzna metoda rysująca pływający interfejs i cofająca kursor
       procedure Redraw_Footer is
       begin
+         -- odswiezenie dolnej czesci interfejsu
          Put(ESC & "[?25l"); -- Ukrycie kursora eliminuje migotanie
          Put(ESC & "[J");    -- Wyczyszczenie śmieci po starym interfejsie
          
@@ -29,6 +31,7 @@ package body Monitoring_Centre is
 
       procedure Init_Screen is
       begin
+         -- przygotowanie pustego ekranu i bufora statystyk
          Put(ESC & "[2J");    -- Pełne czyszczenie
          Put(ESC & "[1;1H");  -- Start od samej góry
          Put(ESC & "[?7l");   -- Wyłączenie zawijania wierszy (ochrona układu)
@@ -43,6 +46,7 @@ package body Monitoring_Centre is
 
       procedure Log (Message : String) is
       begin
+         -- wyswietlenie komunikatu nad statystykami
          Put(ESC & "[?25l");
          Put(ESC & "[2K");    -- Agresywne czyszczenie linii przed nowym logiem
          Put(ESC & "[1G");    -- Skok na początek linii
@@ -55,6 +59,7 @@ package body Monitoring_Centre is
          -- Mapowanie wierszy analizatora (22-28) na nasz bufor (2-8)
          Index : constant Integer := Row - 20;
       begin
+         -- zapisanie komunikatu w odpowiednim wierszu statystyk
          if Index in 2 .. 8 then
             Footer(Index) := To_Unbounded_String(Message);
             Redraw_Footer;
@@ -63,6 +68,7 @@ package body Monitoring_Centre is
 
       procedure Reset_Screen is
       begin
+         -- przywrocenie ustawien terminala po zakonczeniu programu
          Put(ESC & "[?7h"); -- Przywrócenie zawijania
          
          -- Wykonujemy 8 pustych znaków nowej linii, aby bezpiecznie 

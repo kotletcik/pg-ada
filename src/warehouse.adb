@@ -3,10 +3,12 @@ with Unloading_Point;
 
 package body Warehouse is
    task body Storage is
+      -- stala pojemnosc magazynu
       Max_Capacity : constant Integer := 1000;
       Shrimp_Stock : array (Unloading_Point.Shrimp_Name) of Integer := (others => 0);
       Total_Shrimps : Integer := 0;
    begin
+      -- przyjmowanie dostaw i udostepnianie stanu magazynu
       loop
          select
             -- Akceptujemy dostawę TYLKO, gdy jest miejsce
@@ -18,6 +20,7 @@ package body Warehouse is
                end Accept_Delivery;
          or
             accept Get_State (Tygrys, Zolt, Roz, Bial : out Integer; Total, Max : out Integer) do
+               -- przekazanie ilosci towaru dla monitora
                Tygrys := Shrimp_Stock(Unloading_Point.Krewetki_Tygyysie);
                Zolt   := Shrimp_Stock(Unloading_Point.Krewetki_Zolte);
                Roz    := Shrimp_Stock(Unloading_Point.Krewetki_Rozowe);
@@ -26,6 +29,7 @@ package body Warehouse is
                Max    := Max_Capacity;
             end Get_State;
          or
+            -- zakonczenie zadania magazynu, gdy nie ma juz pracy
             terminate;
          end select;
       end loop;

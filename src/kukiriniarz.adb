@@ -4,6 +4,7 @@ with Charger;
 
 package body Kukiriniarz is
 
+   -- utworzenie dwoch robotow obslugujacych transport
    Kukiriniarz_G2 : Kid (Skiba_Kukiriniarz);
    Kukiriniarz_G4 : Kid (Maniek_Kukiriniarz);
    Next_Kukiriniarz : Kukiriniarz_Name := Skiba_Kukiriniarz;
@@ -11,12 +12,14 @@ package body Kukiriniarz is
    protected body Tracker is
       procedure Update (Id : Kukiriniarz_Name; Battery : Integer; Busy : Boolean) is
       begin
+         -- zapisanie najnowszego stanu robota
          Baterie(Id) := Battery;
          Zajetosc(Id) := Busy;
       end Update;
 
       procedure Get_State (Id : Kukiriniarz_Name; Battery : out Integer; Busy : out Boolean) is
       begin
+         -- odczytanie stanu wybranego robota
          Battery := Baterie(Id);
          Busy := Zajetosc(Id);
       end Get_State;
@@ -26,6 +29,7 @@ package body Kukiriniarz is
      (Shrimp_Type : Unloading_Point.Shrimp_Name;
       Quantity : Integer) is
    begin
+      -- proba przydzielenia zadania wolnemu robotowi
       select
          Kukiriniarz_G2.Transport (Shrimp_Type, Quantity);
       else
@@ -33,6 +37,7 @@ package body Kukiriniarz is
             Kukiriniarz_G4.Transport (Shrimp_Type, Quantity);
          else
             if Next_Kukiriniarz = Skiba_Kukiriniarz then
+               -- naprzemienny wybor robota, gdy oba sa zajete
                Kukiriniarz_G2.Transport (Shrimp_Type, Quantity);
                Next_Kukiriniarz := Maniek_Kukiriniarz;
             else
@@ -45,6 +50,7 @@ package body Kukiriniarz is
 
    procedure Finish_All is
    begin
+      -- wyslanie sygnalu zakonczenia do obu robotow
       Kukiriniarz_G2.Finish;
       Kukiriniarz_G4.Finish;
    end Finish_All;
@@ -57,10 +63,12 @@ package body Kukiriniarz is
       Current_Quantity : Integer;
       Has_Job : Boolean := False;
    begin
+      -- zgloszenie poczatkowego stanu robota
       Tracker.Update(Id, Batery_Level, False);
       while not Is_End loop
          select
             accept Transport (Shrimp_Type : Unloading_Point.Shrimp_Name; Quantity : Integer) do
+               -- przyjecie nowego zadania transportowego
                Current_Shrimp := Shrimp_Type;
                Current_Quantity := Quantity;
                Has_Job := True;
@@ -73,6 +81,7 @@ package body Kukiriniarz is
          end select;
 
          if Has_Job then
+            -- przejazd do magazynu i dostarczenie ladunku
             Monitoring_Centre.Screen.Log("[" & Id'Image & "] Jedzie do magazynu...");
             delay 4.0;
             
@@ -98,6 +107,7 @@ package body Kukiriniarz is
                Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
             end if;
 
+            -- oznaczenie zakonczenia zadania i zwolnienie robota
             Monitoring_Centre.Screen.Log("[" & Id'Image & "] Dostarczono towar, kukiriniarz ma wolne");
             Tracker.Update(Id, Batery_Level, False);
             Has_Job := False;

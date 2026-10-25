@@ -6,11 +6,13 @@ package body MonsterTrucks is
    protected body Tracker is
       procedure Update (Id : Integer; State : Truck_State) is
       begin
+         -- zapisanie stanu wybranej ciezarowki
          Stan_Ciezarowek(Id) := State;
       end Update;
 
       procedure Get_States (States : out Truck_Array) is
       begin
+         -- przekazanie stanow wszystkich ciezarowek
          States := Stan_Ciezarowek;
       end Get_States;
    end Tracker;
@@ -19,6 +21,7 @@ package body MonsterTrucks is
       TruckCargo : Unloading_Point.ShrimpsDelivery;
       Delay_Time : Integer;
    begin
+      -- oczekiwanie na dane poczatkowe ciezarowki
       -- to jest po prostu stworzenie ciezarowki
       accept Start(Id : Integer; Quantity : Integer; Travel_Time : Integer; Shrimp_Name : Unloading_Point.Shrimp_Name; Priority : Boolean) do
          TruckCargo.Id := Id;
@@ -32,12 +35,14 @@ package body MonsterTrucks is
       -- podjechala pod rozladunek i zadna inna nie jest rozladowywana
       -- to zaczyna sie jej rozladunek, a tak to czeka na zakonczenie rozladunku innej ciezarowki
       Tracker.Update(TruckCargo.Id, W_Drodze);
+      -- przejazd ciezarowki do punktu rozladunku
       delay Duration(Delay_Time);
 
       Tracker.Update(TruckCargo.Id, W_Kolejce);
       Monitoring_Centre.Screen.Log("[Centrala] MonsterTruck nr" & TruckCargo.Id'Image & " z " & TruckCargo.Commodity'Image & " w ilosci" & TruckCargo.Quantity'Image & " dojechal pod rozladunek i czeka w kolejce");
 
       if TruckCargo.Priority then
+         -- obsluga dostawy priorytetowej przed zwykla
          Monitoring_Centre.Screen.Log("Przyjechalo zamowienie priorytetowe nr" & TruckCargo.Id'Image);
          Unloading_Point.Queue.Join_Queue(True);
          Unloading_Point.Unloading.Unload_Priority(TruckCargo);
@@ -48,6 +53,7 @@ package body MonsterTrucks is
       end if;
 
       Tracker.Update(TruckCargo.Id, Powrot);
+      -- powrot pustej ciezarowki do bazy
       Monitoring_Centre.Screen.Log("[Centrala] MonsterTruck nr" & TruckCargo.Id'Image & " wraca pusty do bazy");
       delay 2.0;
       Tracker.Update(TruckCargo.Id, W_Bazie);
