@@ -65,6 +65,7 @@ package body Kukiriniarz is
    begin
       -- zgloszenie poczatkowego stanu robota
       Tracker.Update(Id, Batery_Level, False);
+
       while not Is_End loop
          select
             accept Transport (Shrimp_Type : Unloading_Point.Shrimp_Name; Quantity : Integer) do
@@ -86,25 +87,24 @@ package body Kukiriniarz is
             delay 4.0;
             
             Warehouse.Storage.Accept_Delivery (Current_Shrimp, Current_Quantity);
-
             Batery_Level := Batery_Level - Level_Needed;
             Monitoring_Centre.Screen.Log("[" & Id'Image & "] Poziom baterii: " & Batery_Level'Image);
 
             -- Jeśli poziom baterii jest niski, to kukiriniarz jedzie do stacji ladowania
             if Batery_Level < Level_Needed then
-               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Poziom baterii niski, jade do stacji ladowania...");
+               Monitoring_Centre.Screen.Log("[" & Id'Image & "] Poziom baterii niski, jade do stacji ladowania...");
                
                -- Zastosowanie instrukcji select ... else do asynchronicznego sprawdzenia zajętości
                select
                   Charger.Charging.Start_Charging (Id'Image);
                else
-                  Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Ladowarka zajeta, grzecznie czekam w kolejce...");
+                  Monitoring_Centre.Screen.Log("[" & Id'Image & "] Ladowarka zajeta, grzecznie czekam w kolejce...");
                   -- Wywołanie blokujące, zmuszające robota do faktycznego poczekania
                   Charger.Charging.Start_Charging (Id'Image);
                end select;
 
                Batery_Level := 100;
-               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
+               Monitoring_Centre.Screen.Log("[" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
             end if;
 
             -- oznaczenie zakonczenia zadania i zwolnienie robota

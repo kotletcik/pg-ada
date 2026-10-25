@@ -15,7 +15,6 @@ package body Data_Analyzer is
       
       T_States : MonsterTrucks.Truck_Array;
       W_D, W_K, P_W, W_B : Integer;
-
       W_Tygrys, W_Zolt, W_Roz, W_Bial, W_Total, W_Max : Integer;
       Q_Priority, Q_Normal, Q_Served : Integer;
 
@@ -48,7 +47,7 @@ package body Data_Analyzer is
          
          -- wyswietlenie zebranych danych na ekranie
          Monitoring_Centre.Screen.Update_Monitor(23, "Odprawione pojazdy   : " & Q_Served'Image);
-         Monitoring_Centre.Screen.Update_Monitor(24, "Flota ciezarowek     : " & W_D'Image & " w drodze |" & Q_Priority'Image & " w kolejce piorytetowej |" & Q_Normal'Image & " w kolejce zwyklej | Wraca: " & P_W'Image & " | W bazie: " & W_B'Image);
+         Monitoring_Centre.Screen.Update_Monitor(24, "Flota ciezarowek     : " & W_D'Image & " w drodze |" & Q_Priority'Image & " w kolejce priorytetowej |" & Q_Normal'Image & " w kolejce zwyklej | Wraca: " & P_W'Image & " | W bazie: " & W_B'Image);
          Monitoring_Centre.Screen.Update_Monitor(25, "Kukiriniarz Skiba    : " & Format_Busy(G2_Busy) & " | Bateria: " & G2_Bat'Image & "%");
          Monitoring_Centre.Screen.Update_Monitor(26, "Kukiriniarz Maniek   : " & Format_Busy(G4_Busy) & " | Bateria: " & G4_Bat'Image & "%");
          Monitoring_Centre.Screen.Update_Monitor(27, "Magazyn (" & W_Total'Image & "/" & W_Max'Image & ")    : Tygrysie:" & W_Tygrys'Image & " | Zolte:" & W_Zolt'Image & " | Rozowe:" & W_Roz'Image & " | Biale:" & W_Bial'Image);

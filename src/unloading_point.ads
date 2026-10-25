@@ -1,6 +1,6 @@
 package Unloading_Point is
 
-   type Shrimp_Name is (Krewetki_Tygyysie, Krewetki_Zolte, Krewetki_Rozowe, Krewetki_Biale);
+   type Shrimp_Name is (Krewetki_Tygrysie, Krewetki_Zolte, Krewetki_Rozowe, Krewetki_Biale);
 
    -- Nasza dostawa krewetek
    type ShrimpsDelivery is record
