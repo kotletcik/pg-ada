@@ -10,8 +10,8 @@ package body Charger is
                delay 5.0;
                Monitoring_Centre.Screen.Log("[" & Kid_Name & "] zakonczyl ladowanie.");
             end Start_Charging;
-            or
-               terminate;
+         or
+            terminate;
          end select;
       end loop;
    end Charging;
