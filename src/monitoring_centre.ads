@@ -8,7 +8,6 @@ package Monitoring_Centre is
       procedure Init_Screen;
       procedure Log (Message : String);
       procedure Update_Monitor (Row : Positive; Message : String);
-      procedure Close_History;
       procedure Reset_Screen;
    private
       Footer : Footer_Buffer;

@@ -64,10 +64,19 @@ package body Kukiriniarz is
 
                --  Jeśli poziom baterii jest niski, to kukiriniarz jedzie do stacji ladowania
                if Batery_Level < Level_Needed then
-                  Monitoring_Centre.Screen.Log("[" & Id'Image & "] Poziom baterii niski, jade do stacji ladowania...");
+               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Poziom baterii niski, jade do stacji ladowania...");
+               
+               -- Zastosowanie instrukcji select ... else do asynchronicznego sprawdzenia zajętości
+               select
                   Charger.Charging.Start_Charging (Id'Image);
-                  Batery_Level := 100;
-                  Monitoring_Centre.Screen.Log("[" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
+               else
+                  Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Ladowarka zajeta, grzecznie czekam w kolejce...");
+                  -- Wywołanie blokujące, zmuszające robota do faktycznego poczekania
+                  Charger.Charging.Start_Charging (Id'Image);
+               end select;
+
+               Batery_Level := 100;
+               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
                end if;
 
 

@@ -4,7 +4,6 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package body Monitoring_Centre is
    ESC : constant Character := Ada.Characters.Latin_1.ESC;
-   History_File : File_Type;
 
    protected body Screen is
       -- Wewnętrzna metoda rysująca pływający interfejs i cofająca kursor
@@ -28,7 +27,6 @@ package body Monitoring_Centre is
 
       procedure Init_Screen is
       begin
-         Create(History_File, Out_File, "pelny_przebieg_symulacji.txt");
          Put(ESC & "[2J");    -- Pełne czyszczenie
          Put(ESC & "[1;1H");  -- Start od samej góry
          Put(ESC & "[?7l");   -- Wyłączenie zawijania wierszy (ochrona układu)
@@ -44,13 +42,11 @@ package body Monitoring_Centre is
       procedure Log (Message : String) is
       begin
          Put(ESC & "[?25l");
-         Put(ESC & "[J");     -- Skasowanie starego interfejsu
+         Put(ESC & "[2K");    -- Agresywne czyszczenie linii przed nowym logiem
+         Put(ESC & "[1G");     -- Skok na początek linii
          Put_Line(Message);   -- Wypisanie logu (terminal naturalnie scrolluje ekran)
          Redraw_Footer;       -- Narysowanie statystyk w nowym miejscu
          Flush;
-         
-         Put_Line(History_File, Message);
-         Flush(History_File);
       end Log;
 
       procedure Update_Monitor (Row : Positive; Message : String) is
@@ -62,13 +58,6 @@ package body Monitoring_Centre is
             Redraw_Footer;
          end if;
       end Update_Monitor;
-
-      procedure Close_History is
-      begin
-         if Is_Open(History_File) then
-            Close(History_File);
-         end if;
-      end Close_History;
 
       procedure Reset_Screen is
       begin

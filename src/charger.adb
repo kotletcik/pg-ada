@@ -1,5 +1,3 @@
-with Ada.Text_IO;
-use Ada.Text_IO;
 with Monitoring_Centre;
 
 package body Charger is

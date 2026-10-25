@@ -37,6 +37,11 @@ package body Unloading_Point is
          Served := Total_Served;
       end Get_Stats;
 
+      procedure Record_Served is
+      begin
+         Total_Served := Total_Served + 1;
+      end Record_Served;
+
       entry Take (Delivery : out ShrimpsDelivery;
                   Available : out Boolean)
          when Priority_Count > 0 or Normal_Count > 0 or Closed is
@@ -61,9 +66,6 @@ package body Unloading_Point is
          else
             Available := False;
          end if;
-         if Available then
-            Total_Served := Total_Served + 1;
-         end if;
       end Take;
 
       procedure Close is
@@ -87,8 +89,10 @@ package body Unloading_Point is
             & Delivery.Id'Image);
          Unloading_Point.Queue.Print_State;
          -- Czas rozladunku zalezy od liczby krewetek.
-         delay Duration(Float(Delivery.Quantity) * 0.2);
+         delay Duration(Float(Delivery.Quantity) * 0.1);
          MonsterTrucks.Dispatcher.Signal_Done(Delivery.Id);
+         
+         Unloading_Point.Queue.Record_Served;
          Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zakonczylismy rozladunek Monstertrucka"
             & Delivery.Id'Image);
          Kukiriniarz.Assign_Transport

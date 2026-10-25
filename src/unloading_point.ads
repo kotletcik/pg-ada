@@ -18,6 +18,7 @@ package Unloading_Point is
       procedure Close;
       procedure Get_Stats (Priority_Wait, Normal_Wait, Served : out Integer);
       procedure Print_State;
+      procedure Record_Served;
    private
       Priority_Deliveries : Delivery_Array;
       Normal_Deliveries : Delivery_Array;

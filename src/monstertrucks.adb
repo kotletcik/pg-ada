@@ -44,7 +44,7 @@ package body MonsterTrucks is
       Tracker.Update(TruckCargo.Id, W_Drodze);
       delay Duration(Delay_Time);
       Tracker.Update(TruckCargo.Id, W_Kolejce);
-      Monitoring_Centre.Screen.Log("[Centrala] MonsterTruck nr" & TruckCargo.Id'Image & " z " & TruckCargo.Commodity'Image & " dojechal pod rozladunek i czeka w kolejce");
+      Monitoring_Centre.Screen.Log("[Centrala] MonsterTruck nr" & TruckCargo.Id'Image & " z " & TruckCargo.Commodity'Image & " w ilosci" & TruckCargo.Quantity'Image & " dojechal pod rozladunek i czeka w kolejce");
       Unloading_Point.Queue.Add(TruckCargo);
       Dispatcher.Wait_For_Unload(TruckCargo.Id);
       Tracker.Update(TruckCargo.Id, Powrot);

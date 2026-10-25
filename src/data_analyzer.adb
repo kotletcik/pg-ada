@@ -40,13 +40,11 @@ package body Data_Analyzer is
          Warehouse.Storage.Get_State(W_Tygrys, W_Zolt, W_Roz, W_Bial, W_Total, W_Max);
          Unloading_Point.Queue.Get_Stats(Q_Priority, Q_Normal, Q_Served);
          
-         Monitoring_Centre.Screen.Update_Monitor(22, "Kolejka oczekujacych : Priorytet: " & Q_Priority'Image & " | Zwykle: " & Q_Normal'Image);
          Monitoring_Centre.Screen.Update_Monitor(23, "Odprawione pojazdy   : " & Q_Served'Image);
-         Monitoring_Centre.Screen.Update_Monitor(24, "Flota ciezarowek     : " & W_D'Image & " w drodze | " & W_K'Image & " w kolejce | " & P_W'Image & " wraca | " & W_B'Image & " w bazie");
+         Monitoring_Centre.Screen.Update_Monitor(24, "Flota ciezarowek     : " & W_D'Image & " w drodze |"& Q_Priority'Image &" w kolejce piorytetowej |"  & Q_Normal'Image & " w kolejce zwyklej | Wraca: " & P_W'Image & " | W bazie: " & W_B'Image);
          Monitoring_Centre.Screen.Update_Monitor(25, "Kukiriniarz Skiba    : " & Format_Busy(G2_Busy) & " | Bateria: " & G2_Bat'Image & "%");
          Monitoring_Centre.Screen.Update_Monitor(26, "Kukiriniarz Maniek   : " & Format_Busy(G4_Busy) & " | Bateria: " & G4_Bat'Image & "%");
-         Monitoring_Centre.Screen.Update_Monitor(27, "Magazyn (" & W_Total'Image & "/" & W_Max'Image & ")    : Tygrysie:" & W_Tygrys'Image & " | Zolte:" & W_Zolt'Image);
-         Monitoring_Centre.Screen.Update_Monitor(28, "                     : Rozowe:  " & W_Roz'Image    & " | Biale:" & W_Bial'Image);
+         Monitoring_Centre.Screen.Update_Monitor(27, "Magazyn (" & W_Total'Image & "/" & W_Max'Image & ")    : Tygrysie:" & W_Tygrys'Image & " | Zolte:" & W_Zolt'Image & " | Rozowe:" & W_Roz'Image & " | Biale:" & W_Bial'Image);
       end Refresh_Data;
 
       begin
