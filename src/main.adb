@@ -1,16 +1,17 @@
 with Ada.Numerics.Discrete_Random;
 with Unloading_Point;
 with Kukiriniarz;
-with Warehouse;
 with MonsterTrucks;
 with Monitoring_Centre;
 with Data_Analyzer;
+
 procedure main is
+   -- zakresy losowanych wartosci dla symulacji
    -- opoznienie przyjazdu cieazrowki
-   subtype OurDelay is Integer range 4 .. 8;
+   subtype OurDelay is Integer range 3 .. 7;
    package Delay_Randomizing is new Ada.Numerics.Discrete_Random(OurDelay);
    Gen : Delay_Randomizing.Generator;
-   
+
    -- ilosc krewetek w ciezarowce
    subtype CommodityQuantity is Integer range 2 .. 10;
    package Quantity_Randomizing is new Ada.Numerics.Discrete_Random(CommodityQuantity);
@@ -25,22 +26,22 @@ procedure main is
    package Priority_randomize is new Ada.Numerics.Discrete_Random(PriorityChance);
    Priority_Gen : Priority_randomize.Generator;
 
-
    TrucksMonster : Array(1 .. 10) of MonsterTrucks.Truck;
    Cumulative_Time : Integer := 0;
+
 begin
+   -- uruchomienie generatorow losowych wartosci
    Delay_Randomizing.Reset(Gen);
    Quantity_Randomizing.Reset(Quantity_Gen);
    Shrimp_Randomizing.Reset(Shrimp_Gen);
    Priority_randomize.Reset(Priority_Gen);
 
    Monitoring_Centre.Screen.Init_Screen;
-   
-   -- petla od tworzenia monstertuckow, nasze wsm glowne dzialanie jak narazie,
-   -- bo technik geminista nie zrobil ladnego warehousea ~ +1 byczku wariacie
-   -- damn ☺
+
+   -- utworzenie i uruchomienie wszystkich ciezarowek
    for I in TrucksMonster'Range loop
       Cumulative_Time := Cumulative_Time + Delay_Randomizing.Random(Gen);
+
       TrucksMonster(I).Start(
          Id => I,
          Quantity => Quantity_Randomizing.Random(Quantity_Gen) * 10,
@@ -49,19 +50,21 @@ begin
          Priority => Priority_randomize.Random(Priority_Gen) = 4
       );
    end loop;
+
+   -- oczekiwanie na powrot wszystkich ciezarowek
    -- petla, ktora koncz dzialanie kazde trucka, dzieki niej program sie konczy inaczej wisialby w nieskonczonosc
    for I in TrucksMonster'Range loop
       TrucksMonster(I).Departure;
    end loop;
-   
-   Unloading_Point.Queue.Close;
+
    Unloading_Point.Unloading.Wait_Until_Done;
+   -- zakonczenie pracy robotow po obsluzeniu dostaw
    Kukiriniarz.Finish_All;
-   
-   Warehouse.Storage.Check_Stock;
-   -- zakonczenie dzialania wyswietlania
+
+   -- 1. Zatrzymanie zadania Modułu G (zabezpieczenie przed zawieszeniem programu)
    Data_Analyzer.Monitor.Stop;
-   
-   -- ostatnie odswiezenie wyswietlania, zeby nie bylo pustego ekranu
+
+   -- 3. Reset kodów ANSI i bezpieczne porzucenie interfejsu
    Monitoring_Centre.Screen.Reset_Screen;
+
 end main;

@@ -1,8 +1,8 @@
 with Unloading_Point;
 
 package Kukiriniarz is
-   type Kukiriniarz_Name is (Skiba_Kukiriniarz,Maniek_Kukiriniarz);
 
+   type Kukiriniarz_Name is (Skiba_Kukiriniarz, Maniek_Kukiriniarz);
    type Battery_Array is array (Kukiriniarz_Name) of Integer;
    type Busy_Array is array (Kukiriniarz_Name) of Boolean;
 
@@ -23,6 +23,6 @@ package Kukiriniarz is
    procedure Assign_Transport
      (Shrimp_Type : Unloading_Point.Shrimp_Name;
       Quantity : Integer);
-
    procedure Finish_All;
+
 end Kukiriniarz;
