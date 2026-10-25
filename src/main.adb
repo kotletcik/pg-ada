@@ -48,13 +48,27 @@ begin
       );
    end loop;
    
-   -- Aktywne czekanie na koniec wszystkich dostaw
+   -- Aktywne czekanie na koniec wszystkich dostaw i powrót floty do bazy
    declare
       P, N, Served : Integer := 0;
+      States : MonsterTrucks.Truck_Array;
+      All_In_Base : Boolean;
    begin
       while Served < 10 loop
          delay 0.5;
          Unloading_Point.Queue.Get_Stats(P, N, Served);
+      end loop;
+
+      loop
+         MonsterTrucks.Tracker.Get_States(States);
+         All_In_Base := True;
+         for I in States'Range loop
+            if States(I) /= MonsterTrucks.W_Bazie then
+               All_In_Base := False;
+            end if;
+         end loop;
+         exit when All_In_Base;
+         delay 0.5;
       end loop;
    end;
    

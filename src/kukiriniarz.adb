@@ -43,7 +43,6 @@ package body Kukiriniarz is
       Batery_Level : Integer := 100;
       Level_Needed : constant Integer := 40; 
       
-      -- Zmienne lokalne do zapamietania ladunku
       My_Shrimp : Unloading_Point.Shrimp_Name;
       My_Quantity : Integer;
    begin
@@ -82,11 +81,11 @@ package body Kukiriniarz is
             Monitoring_Centre.Screen.Log("[" & Id'Image & "] Dostarczono towar, kukiriniarz ma wolne");
             Tracker.Update(Id, Batery_Level, False);
          or
-            accept Finish;
+            accept Finish do
+               Monitoring_Centre.Screen.Log("[" & Id'Image & "] Koniec pracy kukiriniarza");
+            end Finish;
             Is_End := True;
          end select;
       end loop;
-
-      Monitoring_Centre.Screen.Log("[" & Id'Image & "] Koniec pracy kukiriniarza");
    end Kid;
 end Kukiriniarz;
