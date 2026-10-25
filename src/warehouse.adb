@@ -16,19 +16,9 @@ package body Warehouse is
                accept Accept_Delivery (Shrimp_Type : Unloading_Point.Shrimp_Name; Quantity : Integer) do
                   Shrimp_Stock(Shrimp_Type) := Shrimp_Stock(Shrimp_Type) + Quantity;
                   Total_Shrimps := Total_Shrimps + Quantity;
-                  Monitoring_Centre.Screen.Log("[M] Przyjeto dostawe: " & Quantity'Image & " sztuk, rodzaj: " & Shrimp_Type'Image);
+                  Monitoring_Centre.Screen.Log("[Magazyn] Przyjeto dostawe: " & Quantity'Image & " sztuk, rodzaj: " & Shrimp_Type'Image);
                end Accept_Delivery;
 
-         or
-            -- Wyświetlamy stan magazynu
-            accept Check_Stock do
-               Monitoring_Centre.Screen.Log("[M] --- STAN MAGAZYNU KREWETEK ---");
-               for Krewetka in Unloading_Point.Shrimp_Name loop
-                  Monitoring_Centre.Screen.Log("[M] " & Krewetka'Image & ": " & Shrimp_Stock(Krewetka)'Image);
-               end loop;
-               Monitoring_Centre.Screen.Log("[M] Calkowite zapelnienie: " & Total_Shrimps'Image & " / " & Max_Capacity'Image);
-               Monitoring_Centre.Screen.Log("[M] --------------------------------");
-            end Check_Stock;
          or
             accept Get_State (Tygrys, Zolt, Roz, Bial : out Integer; Total, Max : out Integer) do
                Tygrys := Shrimp_Stock(Unloading_Point.Krewetki_Tygyysie);

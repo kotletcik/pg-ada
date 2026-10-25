@@ -52,26 +52,26 @@ package body Kukiriniarz is
          select
             accept Transport (Shrimp_Type : Unloading_Point.Shrimp_Name; Quantity : Integer) do
                Tracker.Update(Id, Batery_Level, True);
-               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Otrzymano zadanie transportu");
+               Monitoring_Centre.Screen.Log("[" & Id'Image & "] Otrzymano zadanie transportu");
 
-               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Jedzie do magazynu...");
+               Monitoring_Centre.Screen.Log("[" & Id'Image & "] Jedzie do magazynu...");
                delay 4.0;
             
                Warehouse.Storage.Accept_Delivery (Shrimp_Type, Quantity);
 
                Batery_Level := Batery_Level - Level_Needed;
-               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Poziom baterii: " & Batery_Level'Image);
+               Monitoring_Centre.Screen.Log("[" & Id'Image & "] Poziom baterii: " & Batery_Level'Image);
 
                --  Jeśli poziom baterii jest niski, to kukiriniarz jedzie do stacji ladowania
                if Batery_Level < Level_Needed then
-                  Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Poziom baterii niski, jade do stacji ladowania...");
+                  Monitoring_Centre.Screen.Log("[" & Id'Image & "] Poziom baterii niski, jade do stacji ladowania...");
                   Charger.Charging.Start_Charging (Id'Image);
                   Batery_Level := 100;
-                  Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
+                  Monitoring_Centre.Screen.Log("[" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
                end if;
 
 
-               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Dostarczono towar, kukiriniarz ma wolne");
+               Monitoring_Centre.Screen.Log("[" & Id'Image & "] Dostarczono towar, kukiriniarz ma wolne");
                Tracker.Update(Id, Batery_Level, False);
             end Transport;
          or
@@ -80,6 +80,6 @@ package body Kukiriniarz is
          end select;
       end loop;
 
-      Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Koniec pracy kukiriniarza");
+      Monitoring_Centre.Screen.Log("[" & Id'Image & "] Koniec pracy kukiriniarza");
    end Kid;
 end Kukiriniarz;

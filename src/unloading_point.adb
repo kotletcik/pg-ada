@@ -1,5 +1,6 @@
 with Monitoring_Centre;
 with Kukiriniarz;
+with MonsterTrucks;
 
 package body Unloading_Point is
    --  kolejka  obsluguje dostawy przychodzace
@@ -83,11 +84,12 @@ package body Unloading_Point is
          exit when not Available;
 
          -- Gdy dostawa jest dostepna, pobieramy ja zgodnie z priorytetem.
-         Monitoring_Centre.Screen.Log("Pracownik: Rozpoczynamy rozladunek Monstertrucka"
+         Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Rozpoczynamy rozladunek Monstertrucka"
             & Delivery.Id'Image);
          -- Czas rozladunku zalezy od liczby krewetek.
          delay Duration(Float(Delivery.Quantity) * 0.2);
-         Monitoring_Centre.Screen.Log("Pracownik: Zakonczylismy rozladunek Monstertrucka"
+         MonsterTrucks.Dispatcher.Signal_Done(Delivery.Id);
+         Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zakonczylismy rozladunek Monstertrucka"
             & Delivery.Id'Image);
          Kukiriniarz.Assign_Transport
            (Delivery.Commodity, Delivery.Quantity);

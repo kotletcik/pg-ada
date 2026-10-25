@@ -14,6 +14,18 @@ package body MonsterTrucks is
       end Get_States;
    end Tracker;
 
+   protected body Dispatcher is
+      entry Wait_For_Unload (for I in Truck_Index) when Is_Done(I) is
+      begin
+         Is_Done(I) := False; 
+      end Wait_For_Unload;
+
+      procedure Signal_Done (Id : Truck_Index) is
+      begin
+         Is_Done(Id) := True;
+      end Signal_Done;
+   end Dispatcher;
+
    task body Truck is
       TruckCargo : Unloading_Point.ShrimpsDelivery;
       Delay_Time : Integer;
@@ -32,10 +44,11 @@ package body MonsterTrucks is
       Tracker.Update(TruckCargo.Id, W_Drodze);
       delay Duration(Delay_Time);
       Tracker.Update(TruckCargo.Id, W_Kolejce);
-      Monitoring_Centre.Screen.Log("MonsterTruck nr" & TruckCargo.Id'Image & " z " & TruckCargo.Commodity'Image & " dojechal pod pod rozladunek i czeka w kolejce");
+      Monitoring_Centre.Screen.Log("[Centrala] MonsterTruck nr" & TruckCargo.Id'Image & " z " & TruckCargo.Commodity'Image & " dojechal pod rozladunek i czeka w kolejce");
       Unloading_Point.Queue.Add(TruckCargo);
+      Dispatcher.Wait_For_Unload(TruckCargo.Id);
       Tracker.Update(TruckCargo.Id, Powrot);
-      Monitoring_Centre.Screen.Log("MonsterTruck nr" & TruckCargo.Id'Image & " wraca pusty do bazy");
+      Monitoring_Centre.Screen.Log("[Centrala] MonsterTruck nr" & TruckCargo.Id'Image & " wraca pusty do bazy");
       accept Departure;
       Tracker.Update(TruckCargo.Id, W_Bazie);
    end Truck;
