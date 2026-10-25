@@ -29,7 +29,7 @@ package body MonsterTrucks is
       delay Duration(Delay_Time);
       
       Tracker.Update(TruckCargo.Id, W_Kolejce);
-      Monitoring_Centre.Screen.Log("[Centrala] MonsterTruck nr" & TruckCargo.Id'Image & " dojechal i czeka w kolejce");
+      Monitoring_Centre.Screen.Log("[Centrala] MonsterTruck nr" & TruckCargo.Id'Image &" z "& TruckCargo.Commodity'Image &"w ilosci" & TruckCargo.Quantity'Image & " dojechal i czeka w kolejce");
       
       Unloading_Point.Queue.Add_Waiting(TruckCargo.Priority);
       if TruckCargo.Priority then

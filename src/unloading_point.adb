@@ -44,7 +44,7 @@ package body Unloading_Point is
                Current_Delivery := Delivery;
                MonsterTrucks.Tracker.Update(Delivery.Id, MonsterTrucks.Rozladunek);
                Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Priorytetowy rozladunek Monstertrucka" & Delivery.Id'Image);
-               delay Duration(Float(Delivery.Quantity) * 0.1);
+               delay Duration(Float(Delivery.Quantity) * 0.2);
                Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zakonczono rozladunek Monstertrucka" & Delivery.Id'Image);
             end Unload_Priority;
             Queue.Record_Served;
@@ -56,8 +56,8 @@ package body Unloading_Point is
                accept Unload_Normal (Delivery : ShrimpsDelivery) do
                   Current_Delivery := Delivery;
                   MonsterTrucks.Tracker.Update(Delivery.Id, MonsterTrucks.Rozladunek);
-                  Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zwykly rozladunek Monstertrucka" & Delivery.Id'Image);
-                  delay Duration(Float(Delivery.Quantity) * 0.1);
+                  Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zwykly rozladunek Monstertrucka" & Delivery.Id'Image );
+                  delay Duration(Float(Delivery.Quantity) * 0.2);
                   Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zakonczono rozladunek Monstertrucka" & Delivery.Id'Image);
                end Unload_Normal;
                Queue.Record_Served;
