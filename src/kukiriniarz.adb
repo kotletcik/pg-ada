@@ -66,17 +66,17 @@ package body Kukiriniarz is
             Monitoring_Centre.Screen.Log("[" & Id'Image & "] Poziom baterii: " & Batery_Level'Image);
 
             if Batery_Level < Level_Needed then
-               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Poziom baterii niski, jade do stacji ladowania...");
+               Monitoring_Centre.Screen.Log("[" & Id'Image & "] Poziom baterii niski, jade do stacji ladowania...");
                
                select
                   Charger.Charging.Start_Charging (Id'Image);
                else
-                  Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Ladowarka zajeta, grzecznie czekam w kolejce...");
+                  Monitoring_Centre.Screen.Log("[" & Id'Image & "] Ladowarka zajeta, grzecznie czekam w kolejce...");
                   Charger.Charging.Start_Charging (Id'Image);
                end select;
 
                Batery_Level := 100;
-               Monitoring_Centre.Screen.Log("[K" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
+               Monitoring_Centre.Screen.Log("[" & Id'Image & "] Naladowany, poziom baterii: " & Batery_Level'Image);
             end if;
 
             Monitoring_Centre.Screen.Log("[" & Id'Image & "] Dostarczono towar, kukiriniarz ma wolne");
