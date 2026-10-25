@@ -3,101 +3,70 @@ with Kukiriniarz;
 with MonsterTrucks;
 
 package body Unloading_Point is
-   --  kolejka  obsluguje dostawy przychodzace
-   -- rownoczesnie z wielu taskow
-   protected body Delivery_Queue is
-      --  aktualna liczba dostaw w obu kolejkach
-      procedure Print_State is
+   protected body Queue is
+      procedure Add_Waiting (Priority : Boolean) is
       begin
-         Monitoring_Centre.Screen.Log("Kolejka priorytetowa: " & Integer'Image(Priority_Count)
-            & " | kolejka zwykla: " & Integer'Image(Normal_Count));
-      end Print_State;
-
-      procedure Add (Delivery : ShrimpsDelivery) is
-      begin
-         -- Priorytet decyduje, do ktorej kolejki trafia dostawa
-         if Delivery.Priority then
+         if Priority then
             Priority_Count := Priority_Count + 1;
-            Priority_Deliveries(Priority_Count) := Delivery;
-            Monitoring_Centre.Screen.Log("Przyjechalo zamowienie priorytetowe nr"
-               & Delivery.Id'Image);
          else
             Normal_Count := Normal_Count + 1;
-            Normal_Deliveries(Normal_Count) := Delivery;
-            Monitoring_Centre.Screen.Log("Przyjechalo zwykle zamowienie nr"
-               & Delivery.Id'Image);
          end if;
-         Print_State;
-      end Add;
-      -- to po prostu pobiera statystyki do tabeli
-      procedure Get_Stats (Priority_Wait, Normal_Wait, Served : out Integer) is
+      end Add_Waiting;
+
+      procedure Remove_Waiting (Priority : Boolean) is
       begin
-         Priority_Wait := Priority_Count;
-         Normal_Wait := Normal_Count;
-         Served := Total_Served;
-      end Get_Stats;
+         if Priority and then Priority_Count > 0 then
+            Priority_Count := Priority_Count - 1;
+         elsif not Priority and then Normal_Count > 0 then
+            Normal_Count := Normal_Count - 1;
+         end if;
+      end Remove_Waiting;
 
       procedure Record_Served is
       begin
          Total_Served := Total_Served + 1;
       end Record_Served;
 
-      entry Take (Delivery : out ShrimpsDelivery;
-                  Available : out Boolean)
-         when Priority_Count > 0 or Normal_Count > 0 or Closed is
+      procedure Get_Stats (Priority_Wait, Normal_Wait, Served : out Integer) is
       begin
-         -- Zawsze najpierw obslugujemy zamowienie priorytetowe
-         if Priority_Count > 0 then
-            Available := True;
-            Delivery := Priority_Deliveries(1);
-            -- Przesuwamy pozostale elementy
-            for I in 1 .. Priority_Count - 1 loop
-               Priority_Deliveries(I) := Priority_Deliveries(I + 1);
-            end loop;
-            Priority_Count := Priority_Count - 1;
-         elsif Normal_Count > 0 then
-            Available := True;
-            Delivery := Normal_Deliveries(1);
-            -- Jezeli nie ma priorytetow, pobieramy zwykle zamowienie
-            for I in 1 .. Normal_Count - 1 loop
-               Normal_Deliveries(I) := Normal_Deliveries(I + 1);
-            end loop;
-            Normal_Count := Normal_Count - 1;
-         else
-            Available := False;
-         end if;
-      end Take;
-
-      procedure Close is
-      begin
-         -- Po zamknieciu nie przyjmujemy juz nowych dostaw.
-         Closed := True;
-      end Close;
-   end Delivery_Queue;
+         Priority_Wait := Priority_Count;
+         Normal_Wait := Normal_Count;
+         Served := Total_Served;
+      end Get_Stats;
+   end Queue;
 
    task body Unloading is
-      Delivery : ShrimpsDelivery;
-      Available : Boolean;
+      Current_Delivery : ShrimpsDelivery;
    begin
-      -- Pracownik czeka na dostawy i konczy po zamknieciu pustej kolejki.
       loop
-         Unloading_Point.Queue.Take(Delivery, Available);
-         exit when not Available;
+         select
+            accept Unload_Priority (Delivery : ShrimpsDelivery) do
+               Current_Delivery := Delivery;
+               MonsterTrucks.Tracker.Update(Delivery.Id, MonsterTrucks.Rozladunek);
+               Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Priorytetowy rozladunek Monstertrucka" & Delivery.Id'Image);
+               delay Duration(Float(Delivery.Quantity) * 0.1);
+               Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zakonczono rozladunek Monstertrucka" & Delivery.Id'Image);
+            end Unload_Priority;
+            Queue.Record_Served;
+            Kukiriniarz.Assign_Transport(Current_Delivery.Commodity, Current_Delivery.Quantity);
 
-         MonsterTrucks.Tracker.Update(Delivery.Id, MonsterTrucks.Rozladunek);
-         -- Gdy dostawa jest dostepna, pobieramy ja zgodnie z priorytetem.
-         Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Rozpoczynamy rozladunek Monstertrucka"
-            & Delivery.Id'Image);
-         Unloading_Point.Queue.Print_State;
-         -- Czas rozladunku zalezy od liczby krewetek.
-         delay Duration(Float(Delivery.Quantity) * 0.1);
-         MonsterTrucks.Dispatcher.Signal_Done(Delivery.Id);
-         
-         Unloading_Point.Queue.Record_Served;
-         Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zakonczylismy rozladunek Monstertrucka"
-            & Delivery.Id'Image);
-         Kukiriniarz.Assign_Transport
-           (Delivery.Commodity, Delivery.Quantity);
+         or
+            -- Obsluga dostaw zwyklych tylko wtedy, gdy kolejka priorytetowa jest pusta
+            when Unload_Priority'Count = 0 =>
+               accept Unload_Normal (Delivery : ShrimpsDelivery) do
+                  Current_Delivery := Delivery;
+                  MonsterTrucks.Tracker.Update(Delivery.Id, MonsterTrucks.Rozladunek);
+                  Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zwykly rozladunek Monstertrucka" & Delivery.Id'Image);
+                  delay Duration(Float(Delivery.Quantity) * 0.1);
+                  Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Zakonczono rozladunek Monstertrucka" & Delivery.Id'Image);
+               end Unload_Normal;
+               Queue.Record_Served;
+               Kukiriniarz.Assign_Transport(Current_Delivery.Commodity, Current_Delivery.Quantity);
+
+         or
+            accept Close;
+            exit;
+         end select;
       end loop;
 
       accept Wait_Until_Done;
