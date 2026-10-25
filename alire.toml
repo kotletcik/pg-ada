@@ -2,8 +2,7 @@ name = "pg_ada"
 description = ""
 version = "0.1.0-dev"
 
-authors = ["Your Name"]
-maintainers = ["Your Name <example@example.com>"]
+authors = ["Wiktoria Burniak, Paweł Gardzijewski, Mateusz Karnaszewski"]
 licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 website = ""
 tags = []
