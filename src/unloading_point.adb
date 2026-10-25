@@ -63,7 +63,6 @@ package body Unloading_Point is
          end if;
          if Available then
             Total_Served := Total_Served + 1;
-            Print_State;
          end if;
       end Take;
 
@@ -86,6 +85,7 @@ package body Unloading_Point is
          -- Gdy dostawa jest dostepna, pobieramy ja zgodnie z priorytetem.
          Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Rozpoczynamy rozladunek Monstertrucka"
             & Delivery.Id'Image);
+         Unloading_Point.Queue.Print_State;
          -- Czas rozladunku zalezy od liczby krewetek.
          delay Duration(Float(Delivery.Quantity) * 0.2);
          MonsterTrucks.Dispatcher.Signal_Done(Delivery.Id);

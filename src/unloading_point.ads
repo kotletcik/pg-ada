@@ -17,6 +17,7 @@ package Unloading_Point is
       entry Take (Delivery : out ShrimpsDelivery; Available : out Boolean);
       procedure Close;
       procedure Get_Stats (Priority_Wait, Normal_Wait, Served : out Integer);
+      procedure Print_State;
    private
       Priority_Deliveries : Delivery_Array;
       Normal_Deliveries : Delivery_Array;
@@ -24,7 +25,7 @@ package Unloading_Point is
       Normal_Count : Natural := 0;
       Closed : Boolean := False;
       Total_Served : Integer := 0;
-      procedure Print_State;
+      
    end Delivery_Queue;
 
    Queue : Delivery_Queue;
