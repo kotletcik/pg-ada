@@ -16,12 +16,14 @@ package Unloading_Point is
       -- Pobiera następną dostawę; Available mówi, czy kolejka nie została zamknięta i opróżniona.
       entry Take (Delivery : out ShrimpsDelivery; Available : out Boolean);
       procedure Close;
+      procedure Get_Stats (Priority_Wait, Normal_Wait, Served : out Integer);
    private
       Priority_Deliveries : Delivery_Array;
       Normal_Deliveries : Delivery_Array;
       Priority_Count : Natural := 0;
       Normal_Count : Natural := 0;
       Closed : Boolean := False;
+      Total_Served : Integer := 0;
       procedure Print_State;
    end Delivery_Queue;
 

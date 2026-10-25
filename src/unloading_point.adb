@@ -1,5 +1,4 @@
-with Ada.Text_IO;
-use Ada.Text_IO;
+with Monitoring_Centre;
 with Kukiriniarz;
 
 package body Unloading_Point is
@@ -9,7 +8,7 @@ package body Unloading_Point is
       --  aktualna liczba dostaw w obu kolejkach
       procedure Print_State is
       begin
-         Put_Line("Kolejka priorytetowa: " & Integer'Image(Priority_Count)
+         Monitoring_Centre.Screen.Log("Kolejka priorytetowa: " & Integer'Image(Priority_Count)
             & " | kolejka zwykla: " & Integer'Image(Normal_Count));
       end Print_State;
 
@@ -19,16 +18,23 @@ package body Unloading_Point is
          if Delivery.Priority then
             Priority_Count := Priority_Count + 1;
             Priority_Deliveries(Priority_Count) := Delivery;
-            Put_Line("Przyjechalo zamowienie priorytetowe nr"
+            Monitoring_Centre.Screen.Log("Przyjechalo zamowienie priorytetowe nr"
                & Delivery.Id'Image);
          else
             Normal_Count := Normal_Count + 1;
             Normal_Deliveries(Normal_Count) := Delivery;
-            Put_Line("Przyjechalo zwykle zamowienie nr"
+            Monitoring_Centre.Screen.Log("Przyjechalo zwykle zamowienie nr"
                & Delivery.Id'Image);
          end if;
          Print_State;
       end Add;
+
+      procedure Get_Stats (Priority_Wait, Normal_Wait, Served : out Integer) is
+      begin
+         Priority_Wait := Priority_Count;
+         Normal_Wait := Normal_Count;
+         Served := Total_Served;
+      end Get_Stats;
 
       entry Take (Delivery : out ShrimpsDelivery;
                   Available : out Boolean)
@@ -55,6 +61,7 @@ package body Unloading_Point is
             Available := False;
          end if;
          if Available then
+            Total_Served := Total_Served + 1;
             Print_State;
          end if;
       end Take;
@@ -76,11 +83,11 @@ package body Unloading_Point is
          exit when not Available;
 
          -- Gdy dostawa jest dostepna, pobieramy ja zgodnie z priorytetem.
-         Put_Line("Pracownik: Rozpoczynamy rozladunek Monstertrucka"
+         Monitoring_Centre.Screen.Log("Pracownik: Rozpoczynamy rozladunek Monstertrucka"
             & Delivery.Id'Image);
          -- Czas rozladunku zalezy od liczby krewetek.
          delay Duration(Float(Delivery.Quantity) * 0.2);
-         Put_Line("Pracownik: Zakonczylismy rozladunek Monstertrucka"
+         Monitoring_Centre.Screen.Log("Pracownik: Zakonczylismy rozladunek Monstertrucka"
             & Delivery.Id'Image);
          Kukiriniarz.Assign_Transport
            (Delivery.Commodity, Delivery.Quantity);

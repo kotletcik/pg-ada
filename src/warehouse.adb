@@ -1,5 +1,4 @@
-with Ada.Text_IO; 
-use Ada.Text_IO;
+with Monitoring_Centre;
 with Unloading_Point;
 
 package body Warehouse is
@@ -17,19 +16,28 @@ package body Warehouse is
                accept Accept_Delivery (Shrimp_Type : Unloading_Point.Shrimp_Name; Quantity : Integer) do
                   Shrimp_Stock(Shrimp_Type) := Shrimp_Stock(Shrimp_Type) + Quantity;
                   Total_Shrimps := Total_Shrimps + Quantity;
-                  Put_Line ("[M] Przyjeto dostawe: " & Quantity'Image & " sztuk, rodzaj: " & Shrimp_Type'Image);
+                  Monitoring_Centre.Screen.Log("[M] Przyjeto dostawe: " & Quantity'Image & " sztuk, rodzaj: " & Shrimp_Type'Image);
                end Accept_Delivery;
 
          or
             -- Wyświetlamy stan magazynu
             accept Check_Stock do
-               Put_Line ("[M] --- STAN MAGAZYNU KREWETEK ---");
+               Monitoring_Centre.Screen.Log("[M] --- STAN MAGAZYNU KREWETEK ---");
                for Krewetka in Unloading_Point.Shrimp_Name loop
-                  Put_Line ("[M] " & Krewetka'Image & ": " & Shrimp_Stock(Krewetka)'Image);
+                  Monitoring_Centre.Screen.Log("[M] " & Krewetka'Image & ": " & Shrimp_Stock(Krewetka)'Image);
                end loop;
-               Put_Line ("[M] Calkowite zapelnienie: " & Total_Shrimps'Image & " / " & Max_Capacity'Image);
-               Put_Line ("[M] --------------------------------");
+               Monitoring_Centre.Screen.Log("[M] Calkowite zapelnienie: " & Total_Shrimps'Image & " / " & Max_Capacity'Image);
+               Monitoring_Centre.Screen.Log("[M] --------------------------------");
             end Check_Stock;
+         or
+            accept Get_State (Tygrys, Zolt, Roz, Bial : out Integer; Total, Max : out Integer) do
+               Tygrys := Shrimp_Stock(Unloading_Point.Krewetki_Tygyysie);
+               Zolt   := Shrimp_Stock(Unloading_Point.Krewetki_Zolte);
+               Roz    := Shrimp_Stock(Unloading_Point.Krewetki_Rozowe);
+               Bial   := Shrimp_Stock(Unloading_Point.Krewetki_Biale);
+               Total  := Total_Shrimps;
+               Max    := Max_Capacity;
+            end Get_State;
          or
             terminate;
          end select;

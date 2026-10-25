@@ -1,11 +1,10 @@
 with Ada.Numerics.Discrete_Random;
-with Ada.Text_IO;
-use Ada.Text_IO;
 with Unloading_Point;
 with Kukiriniarz;
 with Warehouse;
 with MonsterTrucks;
-
+with Monitoring_Centre;
+with Data_Analyzer;
 procedure main is
    -- opoznienie przyjazdu cieazrowki
    subtype OurDelay is Integer range 1 .. 20;
@@ -34,6 +33,8 @@ begin
    Quantity_Randomizing.Reset(Quantity_Gen);
    Shrimp_Randomizing.Reset(Shrimp_Gen);
    Priority_randomize.Reset(Priority_Gen);
+
+   Monitoring_Centre.Screen.Init_Screen;
    
    -- petla od tworzenia monstertuckow, nasze wsm glowne dzialanie jak narazie,
    -- bo technik geminista nie zrobil ladnego warehousea ~ +1 byczku wariacie
@@ -57,4 +58,13 @@ begin
    Kukiriniarz.Finish_All;
    
    Warehouse.Storage.Check_Stock;
+
+   -- 1. Zatrzymanie zadania Modułu G (zabezpieczenie przed zawieszeniem programu)
+   Data_Analyzer.Monitor.Stop;
+   
+   -- 2. Zamknięcie historii w pliku TXT
+   Monitoring_Centre.Screen.Close_History;
+   
+   -- 3. Reset kodów ANSI i bezpieczne porzucenie interfejsu
+   Monitoring_Centre.Screen.Reset_Screen;
 end main;
