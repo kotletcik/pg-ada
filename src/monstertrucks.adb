@@ -3,17 +3,19 @@ with Unloading_Point;
 
 package body MonsterTrucks is
    protected body Tracker is
+      -- to po prostu updatuje czy ciezarowka jedzei czy stoi
       procedure Update (Id : Integer; State : Truck_State) is
       begin
          Stan_Ciezarowek(Id) := State;
       end Update;
-
+      -- a to pobiera wszystkie stany, ja zaraz zaczne miec stany
       procedure Get_States (States : out Truck_Array) is
       begin
          States := Stan_Ciezarowek;
       end Get_States;
    end Tracker;
 
+   -- to po prostu symuluje czekanie na rozladowanie
    protected body Dispatcher is
       entry Wait_For_Unload (for I in Truck_Index) when Is_Done(I) is
       begin
@@ -49,6 +51,7 @@ package body MonsterTrucks is
       Dispatcher.Wait_For_Unload(TruckCargo.Id);
       Tracker.Update(TruckCargo.Id, Powrot);
       Monitoring_Centre.Screen.Log("[Centrala] MonsterTruck nr" & TruckCargo.Id'Image & " wraca pusty do bazy");
+      delay Duration(Delay_Time);
       accept Departure;
       Tracker.Update(TruckCargo.Id, W_Bazie);
    end Truck;

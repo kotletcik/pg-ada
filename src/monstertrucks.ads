@@ -2,7 +2,7 @@ with Unloading_Point;
 
 -- to jest po prostu deklaracja naszych monsterturkcow
 package MonsterTrucks is
-   type Truck_State is (W_Bazie, W_Drodze, W_Kolejce, Powrot);
+   type Truck_State is (W_Bazie, W_Drodze, W_Kolejce, Rozladunek, Powrot);
    type Truck_Array is array (1 .. 10) of Truck_State;
    subtype Truck_Index is Integer range 1 .. 10;
    type Done_Array is array (Truck_Index) of Boolean;

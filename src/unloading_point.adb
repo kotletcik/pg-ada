@@ -29,7 +29,7 @@ package body Unloading_Point is
          end if;
          Print_State;
       end Add;
-
+      -- to po prostu pobiera statystyki do tabeli
       procedure Get_Stats (Priority_Wait, Normal_Wait, Served : out Integer) is
       begin
          Priority_Wait := Priority_Count;
@@ -84,6 +84,7 @@ package body Unloading_Point is
          Unloading_Point.Queue.Take(Delivery, Available);
          exit when not Available;
 
+         MonsterTrucks.Tracker.Update(Delivery.Id, MonsterTrucks.Rozladunek);
          -- Gdy dostawa jest dostepna, pobieramy ja zgodnie z priorytetem.
          Monitoring_Centre.Screen.Log("[Punkt rozladunkowy] Rozpoczynamy rozladunek Monstertrucka"
             & Delivery.Id'Image);

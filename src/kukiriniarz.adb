@@ -8,12 +8,14 @@ package body Kukiriniarz is
    Next_Kukiriniarz : Kukiriniarz_Name := Skiba_Kukiriniarz;
 
    protected body Tracker is
+      -- a to po prostu na poczatku i koncu transportu pobiera baterie kukiriniarza
       procedure Update (Id : Kukiriniarz_Name; Battery : Integer; Busy : Boolean) is
       begin
          Baterie(Id) := Battery;
          Zajetosc(Id) := Busy;
       end Update;
 
+      -- to po prostu pobiera statystyki do tabeli
       procedure Get_State (Id : Kukiriniarz_Name; Battery : out Integer; Busy : out Boolean) is
       begin
          Battery := Baterie(Id);

@@ -1,7 +1,7 @@
 with Ada.Strings.Unbounded;
 
 package Monitoring_Centre is
-   -- Jawna deklaracja nazwanego typu tablicowego
+   -- to jest nasz biforek na tekst
    type Footer_Buffer is array (1 .. 8) of Ada.Strings.Unbounded.Unbounded_String;
 
    protected Screen is

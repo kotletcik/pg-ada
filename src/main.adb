@@ -7,7 +7,7 @@ with Monitoring_Centre;
 with Data_Analyzer;
 procedure main is
    -- opoznienie przyjazdu cieazrowki
-   subtype OurDelay is Integer range 3 .. 7;
+   subtype OurDelay is Integer range 4 .. 8;
    package Delay_Randomizing is new Ada.Numerics.Discrete_Random(OurDelay);
    Gen : Delay_Randomizing.Generator;
    
@@ -59,10 +59,9 @@ begin
    Kukiriniarz.Finish_All;
    
    Warehouse.Storage.Check_Stock;
-
-   -- 1. Zatrzymanie zadania Modułu G (zabezpieczenie przed zawieszeniem programu)
+   -- zakonczenie dzialania wyswietlania
    Data_Analyzer.Monitor.Stop;
    
-   -- 3. Reset kodów ANSI i bezpieczne porzucenie interfejsu
+   -- ostatnie odswiezenie wyswietlania, zeby nie bylo pustego ekranu
    Monitoring_Centre.Screen.Reset_Screen;
 end main;
