@@ -18,7 +18,6 @@ package body Warehouse is
                   Total_Shrimps := Total_Shrimps + Quantity;
                   Monitoring_Centre.Screen.Log("[Magazyn] Przyjeto dostawe: " & Quantity'Image & " sztuk, rodzaj: " & Shrimp_Type'Image);
                end Accept_Delivery;
-
          or
             accept Get_State (Tygrys, Zolt, Roz, Bial : out Integer; Total, Max : out Integer) do
                Tygrys := Shrimp_Stock(Unloading_Point.Krewetki_Tygyysie);
