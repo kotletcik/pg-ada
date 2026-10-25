@@ -1,5 +1,4 @@
-with Ada.Text_IO;
-use Ada.Text_IO;
+with Monitoring_Centre;
 
 package body Charger is
    task body Charging is
@@ -7,9 +6,9 @@ package body Charger is
       loop
          select
             accept Start_Charging (Kid_Name : String) do
-               Put_Line("Kukiriniarz " & Kid_Name & " rozpoczyna ladowanie.");
+               Monitoring_Centre.Screen.Log("[" & Kid_Name & "] rozpoczyna ladowanie.");
                delay 5.0;
-               Put_Line("Kukiriniarz " & Kid_Name & " zakonczyl ladowanie.");
+               Monitoring_Centre.Screen.Log("[" & Kid_Name & "] zakonczyl ladowanie.");
             end Start_Charging;
             or
                terminate;

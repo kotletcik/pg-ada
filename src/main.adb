@@ -1,14 +1,13 @@
 with Ada.Numerics.Discrete_Random;
-with Ada.Text_IO;
-use Ada.Text_IO;
 with Unloading_Point;
 with Kukiriniarz;
 with Warehouse;
 with MonsterTrucks;
-
+with Monitoring_Centre;
+with Data_Analyzer;
 procedure main is
    -- opoznienie przyjazdu cieazrowki
-   subtype OurDelay is Integer range 1 .. 20;
+   subtype OurDelay is Integer range 4 .. 8;
    package Delay_Randomizing is new Ada.Numerics.Discrete_Random(OurDelay);
    Gen : Delay_Randomizing.Generator;
    
@@ -28,21 +27,24 @@ procedure main is
 
 
    TrucksMonster : Array(1 .. 10) of MonsterTrucks.Truck;
-
+   Cumulative_Time : Integer := 0;
 begin
    Delay_Randomizing.Reset(Gen);
    Quantity_Randomizing.Reset(Quantity_Gen);
    Shrimp_Randomizing.Reset(Shrimp_Gen);
    Priority_randomize.Reset(Priority_Gen);
+
+   Monitoring_Centre.Screen.Init_Screen;
    
    -- petla od tworzenia monstertuckow, nasze wsm glowne dzialanie jak narazie,
    -- bo technik geminista nie zrobil ladnego warehousea ~ +1 byczku wariacie
    -- damn ☺
    for I in TrucksMonster'Range loop
+      Cumulative_Time := Cumulative_Time + Delay_Randomizing.Random(Gen);
       TrucksMonster(I).Start(
          Id => I,
          Quantity => Quantity_Randomizing.Random(Quantity_Gen) * 10,
-         Travel_Time => Delay_Randomizing.Random(Gen),
+         Travel_Time => Cumulative_Time,
          Shrimp_Name => Shrimp_Randomizing.Random(Shrimp_Gen),
          Priority => Priority_randomize.Random(Priority_Gen) = 4
       );
@@ -57,4 +59,9 @@ begin
    Kukiriniarz.Finish_All;
    
    Warehouse.Storage.Check_Stock;
+   -- zakonczenie dzialania wyswietlania
+   Data_Analyzer.Monitor.Stop;
+   
+   -- ostatnie odswiezenie wyswietlania, zeby nie bylo pustego ekranu
+   Monitoring_Centre.Screen.Reset_Screen;
 end main;
